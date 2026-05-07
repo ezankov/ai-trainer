@@ -19,13 +19,13 @@ ai-trainer/
 - **Security:** Spring Security, stateless (no sessions), BCrypt password encoding
 - **Validation:** Jakarta Bean Validation (`spring-boot-starter-validation`)
 - **Server port:** 8080
-- **Base package:** `com.example.backend`
+- **Base package:** `com.trainer`
 
 ### Key conventions
 - Public endpoints are under `/api/auth/**`; everything else requires authentication
 - DB credentials come from env vars `DB_USERNAME` / `DB_PASSWORD` (defaults: `postgres`/`postgres`)
 - Use `@EnableMethodSecurity` for method-level access control
-- Logging: root=INFO, `com.example.backend`=DEBUG
+- Logging: root=INFO, `com.trainer`=DEBUG
 
 ### Build & run
 ```bash
