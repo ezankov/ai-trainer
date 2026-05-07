@@ -1,9 +1,10 @@
 -- V1__init_schema.sql
--- Initial schema placeholder.
--- Add your CREATE TABLE statements here.
+-- Initial schema setup.
+-- Flyway is configured to manage the 'trainer' schema, so all objects
+-- created here will live in that schema.
 
 -- Example: a simple users table
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS trainer.users (
     id         BIGSERIAL    PRIMARY KEY,
     username   VARCHAR(100) NOT NULL UNIQUE,
     password   VARCHAR(255) NOT NULL,
