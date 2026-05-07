@@ -168,9 +168,13 @@ Functional route guard (`CanActivateFn`). Reads `AuthService.isAuthenticated$`:
 
 Standalone component. Reactive form with `username` and `password` controls. Handles 401 vs other errors distinctly. Disables submit and shows spinner while request is in-flight.
 
+PrimeNG components used: `p-inputtext` for the username field, `p-password` for the masked password field, `p-button` for the submit button (with `[loading]` binding for in-flight state), `p-message` for inline error display.
+
 #### `RegisterPageComponent` — `src/app/features/auth/register/`
 
 Standalone component. Reactive form with `username`, `email`, `password`, `confirmPassword` controls. Cross-field validator for password match. Maps 409 response body to field-level errors.
+
+PrimeNG components used: `p-inputtext` for username and email fields, `p-password` for both password fields (with `[feedback]="false"` on confirm-password), `p-button` for the submit button (with `[loading]` binding), `p-message` for inline and form-level error display.
 
 #### Route configuration (`app.routes.ts`)
 

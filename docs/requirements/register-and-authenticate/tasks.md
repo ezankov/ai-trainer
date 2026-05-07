@@ -92,14 +92,19 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
 - [ ] 10. Backend checkpoint — Ensure all tests pass
   - Ensure all backend tests pass, ask the user if questions arise.
 
-- [ ] 11. Implement Angular `AuthService`
-  - [ ] 11.1 Create `AuthService` in `src/app/core/auth/`
+- [ ] 11. Install and configure PrimeNG
+  - Install PrimeNG: `npm install primeng @primeuix/themes`
+  - Add `providePrimeNG({ theme: { preset: Aura } })` and `provideAnimationsAsync()` to `app.config.ts`
+  - _Applies to: all frontend UI tasks_
+
+- [ ] 12. Implement Angular `AuthService`
+  - [ ] 12.1 Create `AuthService` in `src/app/core/auth/`
     - `BehaviorSubject<DecodedToken | null>` for `currentUser$`; derive `isAuthenticated$`
     - Implement `login()`, `register()`, `logout()`, `getToken()`, `initFromStorage()`
     - Decode JWT payload via base64 (middle segment); check `exp` against `Date.now()`
     - Wire `APP_INITIALIZER` to call `initFromStorage()` at startup
     - _Requirements: 4.1, 4.2, 4.3, 4.5_
-  - [ ]* 11.2 Write property tests for `AuthService` (`auth.service.spec.ts`)
+  - [ ]* 12.2 Write property tests for `AuthService` (`auth.service.spec.ts`)
     - **Property 8: Successful login stores the token** — for any JWT string returned by a successful login response, the token is present in `localStorage` after `login()` resolves
     - **Validates: Requirements 4.1**
     - **Property 9: App initialisation restores authenticated state from a valid token** — for any non-expired well-formed JWT in `localStorage`, `initFromStorage()` sets `isAuthenticated$` to `true` and emits a `DecodedToken` with matching `sub`
@@ -110,63 +115,65 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     - **Validates: Requirements 4.5**
     - _Uses fast-check 3.22.0; install as devDependency_
 
-- [ ] 12. Implement `AuthInterceptor`
-  - [ ] 12.1 Create `AuthInterceptor` (`HttpInterceptorFn`) in `src/app/core/auth/`
+- [ ] 13. Implement `AuthInterceptor`
+  - [ ] 13.1 Create `AuthInterceptor` (`HttpInterceptorFn`) in `src/app/core/auth/`
     - Read token from `AuthService.getToken()`; clone request with `Authorization: Bearer <token>` if present
     - On HTTP 401 response, call `AuthService.logout()`
     - Register in `app.config.ts` via `withInterceptors([authInterceptor])`
     - _Requirements: 4.4, 4.6_
-  - [ ]* 12.2 Write property tests for `AuthInterceptor` (`auth.interceptor.spec.ts`)
+  - [ ]* 13.2 Write property tests for `AuthInterceptor` (`auth.interceptor.spec.ts`)
     - **Property 11: HTTP interceptor attaches Bearer token to every request** — for any token string in `localStorage`, every outgoing request processed by `AuthInterceptor` carries `Authorization: Bearer <token>`
     - **Validates: Requirements 4.4**
     - _Uses fast-check `fc.string()` for token values_
 
-- [ ] 13. Implement `AuthGuard`
-  - [ ] 13.1 Create `AuthGuard` (`CanActivateFn`) in `src/app/core/auth/`
+- [ ] 14. Implement `AuthGuard`
+  - [ ] 14.1 Create `AuthGuard` (`CanActivateFn`) in `src/app/core/auth/`
     - Unauthenticated on protected route → redirect to `/auth/login?redirectTo=<url>`
     - Authenticated on `/auth/login` or `/auth/register` → redirect to `/`
     - Missing or expired token → clear token, treat as unauthenticated
     - _Requirements: 5.1, 5.2, 5.3_
-  - [ ]* 13.2 Write property tests for `AuthGuard` (`auth.guard.spec.ts`)
+  - [ ]* 14.2 Write property tests for `AuthGuard` (`auth.guard.spec.ts`)
     - **Property 13: Auth guard redirects unauthenticated users with original URL preserved** — for any protected route path, when no valid token is present, `AuthGuard` redirects to `/auth/login` with the original path as `redirectTo`
     - **Validates: Requirements 5.1**
     - _Uses fast-check `fc.webPath()` for route paths_
 
-- [ ] 14. Implement `LoginPageComponent`
-  - [ ] 14.1 Create `LoginPageComponent` in `src/app/features/auth/login/`
+- [ ] 15. Implement `LoginPageComponent`
+  - [ ] 15.1 Create `LoginPageComponent` in `src/app/features/auth/login/`
     - Standalone component; reactive form with `username` and `password` controls
+    - Use `p-inputtext` for username, `p-password` for the masked password field, `p-button` with `[loading]` for submit, `p-message` for inline errors
     - Inline validation errors for blank fields (no API call); distinct 401 vs other-error messages
     - Disable submit and show spinner while request is in-flight; clear errors on resubmit
     - Navigate to `/` on success; provide link to register page
     - Redirect to `/` if already authenticated (via `AuthGuard`)
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8_
-  - [ ]* 14.2 Write property tests for `LoginPageComponent` (`login-page.component.spec.ts`)
+  - [ ]* 15.2 Write property tests for `LoginPageComponent` (`login-page.component.spec.ts`)
     - **Property 14: Login form blank-field validation prevents API calls** — for any combination of blank username and/or password, submitting the form shows inline errors and dispatches no HTTP request
     - **Validates: Requirements 6.2**
     - _Uses fast-check `fc.constantFrom('', ' ', '   ')` for blank inputs_
 
-- [ ] 15. Implement `RegisterPageComponent`
-  - [ ] 15.1 Create `RegisterPageComponent` in `src/app/features/auth/register/`
+- [ ] 16. Implement `RegisterPageComponent`
+  - [ ] 16.1 Create `RegisterPageComponent` in `src/app/features/auth/register/`
     - Standalone component; reactive form with `username`, `email`, `password`, `confirmPassword` controls
+    - Use `p-inputtext` for username and email, `p-password` for both password fields (`[feedback]="false"` on confirm), `p-button` with `[loading]` for submit, `p-message` for errors
     - Cross-field validator for password match; inline errors for blank fields (no API call)
     - Map 409 response body to field-level errors; display 400 `message` from API
     - Disable submit and show spinner while request is in-flight; clear errors on resubmit
     - Navigate to `/auth/login` on success (HTTP 201); provide link to login page
     - Redirect to `/` if already authenticated (via `AuthGuard`)
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9_
-  - [ ]* 15.2 Write property tests for `RegisterPageComponent` (`register-page.component.spec.ts`)
+  - [ ]* 16.2 Write property tests for `RegisterPageComponent` (`register-page.component.spec.ts`)
     - **Property 15: Registration form blank-field validation prevents API calls** — for any combination of blank required fields, submitting the form shows inline errors and dispatches no HTTP request
     - **Validates: Requirements 7.2**
     - **Property 16: Password mismatch validation prevents API calls** — for any two distinct non-empty strings in password and confirm-password, submitting the form shows a cross-field error and dispatches no HTTP request
     - **Validates: Requirements 7.3**
     - _Uses fast-check `fc.constantFrom('', ' ', '   ')` and `fc.tuple(fc.string(), fc.string()).filter(([a,b]) => a !== b)`_
 
-- [ ] 16. Wire routes and app configuration
+- [ ] 17. Wire routes and app configuration
   - Update `app.routes.ts` with `/auth/login`, `/auth/register` (lazy-loaded), and a protected root route using `AuthGuard`
   - Update `app.config.ts` to register `AuthInterceptor` via `withInterceptors([authInterceptor])` and add `APP_INITIALIZER` for `AuthService.initFromStorage()`
   - _Requirements: 4.2, 5.1, 5.2_
 
-- [ ] 17. Frontend checkpoint — Ensure all tests pass
+- [ ] 18. Frontend checkpoint — Ensure all tests pass
   - Ensure all frontend tests pass, ask the user if questions arise.
 
 ## Notes
@@ -187,12 +194,12 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     { "id": 2, "tasks": ["3.2", "4.3", "6.1"] },
     { "id": 3, "tasks": ["5", "6.2", "8.1", "8.2", "8.3", "8.4"] },
     { "id": 4, "tasks": ["7", "9.1", "9.2"] },
-    { "id": 5, "tasks": ["11.1"] },
-    { "id": 6, "tasks": ["11.2", "12.1"] },
-    { "id": 7, "tasks": ["12.2", "13.1"] },
-    { "id": 8, "tasks": ["13.2", "14.1"] },
-    { "id": 9, "tasks": ["14.2", "15.1"] },
-    { "id": 10, "tasks": ["15.2", "16"] }
+    { "id": 5, "tasks": ["11", "12.1"] },
+    { "id": 6, "tasks": ["12.2", "13.1"] },
+    { "id": 7, "tasks": ["13.2", "14.1"] },
+    { "id": 8, "tasks": ["14.2", "15.1"] },
+    { "id": 9, "tasks": ["15.2", "16.1"] },
+    { "id": 10, "tasks": ["16.2", "17"] }
   ]
 }
 ```

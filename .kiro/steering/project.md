@@ -49,6 +49,7 @@ cd trainer-be
 - Routes are defined in `src/app/app.routes.ts` using lazy-loaded feature modules where possible
 - Place feature code in `src/app/features/<feature-name>/`
 - Place shared services in `src/app/core/` and reusable UI in `src/app/shared/`
+- **UI component library: PrimeNG** — use PrimeNG components for all UI elements (inputs, buttons, dialogs, tables, menus, etc.). Do not build custom equivalents for anything PrimeNG already provides. Import `providePrimeNG()` and `provideAnimationsAsync()` in `app.config.ts`. Use the PrimeNG theme via `provideTheme()`.
 
 ### Build & run
 ```bash
