@@ -31,5 +31,5 @@ server:
 logging:
   level:
     root: INFO
-    com.example.backend: DEBUG
+    com.trainer: DEBUG
     org.flywaydb: INFO
