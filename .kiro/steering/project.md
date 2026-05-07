@@ -58,6 +58,21 @@ npm run build       # production build
 npm test            # Karma tests
 ```
 
+## Documentation
+
+All feature documentation lives under `docs/requirements/` at the project root. Each feature gets its own subfolder named after the feature in kebab-case. Inside each folder there are three files:
+
+```
+docs/requirements/<feature-name>/
+├── requirements.md   # user stories and acceptance criteria
+├── design.md         # architecture, components, data models, correctness properties
+└── tasks.md          # ordered implementation task list
+```
+
+Example: `docs/requirements/register-and-authenticate/`
+
+Do not place any of these files inside `.kiro/specs/`. The `.kiro/specs/` directory is for internal Kiro tooling metadata only (e.g. `.config.kiro`).
+
 ## Database Schema
 
 Current tables (schema: `trainer`):
