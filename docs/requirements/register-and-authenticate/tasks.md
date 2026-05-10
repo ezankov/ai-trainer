@@ -6,21 +6,21 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
 
 ## Tasks
 
-- [ ] 1. Add backend dependencies and JWT configuration
+- [x] 1. Add backend dependencies and JWT configuration
   - Add `jjwt-api`, `jjwt-impl`, `jjwt-jackson` (JJWT 0.12.x) and `jqwik` (1.9.3) to `pom.xml`
   - Add `app.jwt.secret` and `app.jwt.expiration-ms` (86400000) properties to `application.yml`
   - _Requirements: 2.5_
 
-- [ ] 2. Implement the `User` entity and `UserRepository`
-  - [ ] 2.1 Create `User` JPA entity in `com.trainer.auth`
+- [x] 2. Implement the `User` entity and `UserRepository`
+  - [x] 2.1 Create `User` JPA entity in `com.trainer.auth`
     - Map to `trainer.users` table; implement `UserDetails`; fields: `id`, `username`, `email`, `password`, `enabled`, `createdAt`, `updatedAt`
     - _Requirements: 1.1, 1.8, 2.6_
-  - [ ] 2.2 Create `UserRepository` in `com.trainer.auth`
+  - [x] 2.2 Create `UserRepository` in `com.trainer.auth`
     - Extend `JpaRepository<User, Long>`; add `findByUsername`, `existsByUsername`, `existsByEmail`
     - _Requirements: 1.2, 1.3, 2.1_
 
-- [ ] 3. Implement `JwtUtil`
-  - [ ] 3.1 Create `JwtUtil` bean in `com.trainer.auth`
+- [x] 3. Implement `JwtUtil`
+  - [x] 3.1 Create `JwtUtil` bean in `com.trainer.auth`
     - Implement `generateToken(String username)`, `extractUsername(String token)`, `isTokenValid(String token, UserDetails userDetails)`
     - Read secret and expiry from `application.yml` via `@Value`
     - _Requirements: 2.5, 3.1, 3.3, 3.4_
@@ -29,11 +29,11 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     - **Validates: Requirements 2.5**
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` valid username arbitraries_
 
-- [ ] 4. Implement `AuthService` bean and request/response DTOs
-  - [ ] 4.1 Create DTOs: `RegisterRequest`, `LoginRequest`, `RegisterResponse`, `LoginResponse`, `ErrorResponse` in `com.trainer.auth`
+- [x] 4. Implement `AuthService` bean and request/response DTOs
+  - [x] 4.1 Create DTOs: `RegisterRequest`, `LoginRequest`, `RegisterResponse`, `LoginResponse`, `ErrorResponse` in `com.trainer.auth`
     - Apply Bean Validation constraints as specified in the design
     - _Requirements: 1.4, 1.5, 1.6, 1.7, 2.4_
-  - [ ] 4.2 Create `AuthService` bean in `com.trainer.auth`
+  - [x] 4.2 Create `AuthService` bean in `com.trainer.auth`
     - Implement `register(RegisterRequest)`: check uniqueness, BCrypt-hash password, persist, return `RegisterResponse`
     - Implement `login(LoginRequest)`: load user, verify BCrypt match, check `enabled`, issue JWT via `JwtUtil`
     - Implement `UserDetailsService` to load users by username for Spring Security
@@ -43,22 +43,22 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     - **Validates: Requirements 1.1, 1.8**
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` valid field arbitraries; mock `UserRepository` and `PasswordEncoder`_
 
-- [ ] 5. Implement `GlobalExceptionHandler`
+- [x] 5. Implement `GlobalExceptionHandler`
   - Create `@RestControllerAdvice` in `com.trainer.auth` handling `MethodArgumentNotValidException` (→ 400), `DataIntegrityViolationException` (→ 409), `BadCredentialsException` / `DisabledException` (→ 401), and generic `Exception` (→ 500)
   - Ensure no stack traces, class names, or SQL details are exposed in responses
   - _Requirements: 1.2, 1.3, 1.4, 2.2, 2.3_
 
-- [ ] 6. Implement `JwtAuthFilter` and update `SecurityConfig`
-  - [ ] 6.1 Create `JwtAuthFilter` in `com.trainer.auth`
+- [x] 6. Implement `JwtAuthFilter` and update `SecurityConfig`
+  - [x] 6.1 Create `JwtAuthFilter` in `com.trainer.auth`
     - Extend `OncePerRequestFilter`; read `Authorization` header; delegate to `JwtUtil`; load `UserDetails`; set `SecurityContextHolder`
     - Catch all JWT exceptions and write a 401 response directly (no stack trace)
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.6_
-  - [ ] 6.2 Update `SecurityConfig` in `com.trainer.config`
+  - [x] 6.2 Update `SecurityConfig` in `com.trainer.config`
     - Inject `JwtAuthFilter`; add it before `UsernamePasswordAuthenticationFilter`
     - Expose `AuthenticationManager` bean; wire `UserDetailsService`
     - _Requirements: 3.1, 3.5_
 
-- [ ] 7. Implement `AuthController`
+- [x] 7. Implement `AuthController`
   - Create `AuthController` in `com.trainer.auth` with `POST /api/auth/register` (→ 201) and `POST /api/auth/login` (→ 200)
   - Use `@Valid` on request bodies; delegate to `AuthService`
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 2.1, 2.2, 2.3, 2.4_
@@ -89,16 +89,16 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     - Public endpoint accessibility (`/api/auth/**`, `/actuator/health`)
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
 
-- [ ] 10. Backend checkpoint — Ensure all tests pass
+- [x] 10. Backend checkpoint — Ensure all tests pass
   - Ensure all backend tests pass, ask the user if questions arise.
 
-- [ ] 11. Install and configure PrimeNG
+- [x] 11. Install and configure PrimeNG
   - Install PrimeNG: `npm install primeng @primeuix/themes`
   - Add `providePrimeNG({ theme: { preset: Aura } })` and `provideAnimationsAsync()` to `app.config.ts`
   - _Applies to: all frontend UI tasks_
 
-- [ ] 12. Implement Angular `AuthService`
-  - [ ] 12.1 Create `AuthService` in `src/app/core/auth/`
+- [x] 12. Implement Angular `AuthService`
+  - [x] 12.1 Create `AuthService` in `src/app/core/auth/`
     - `BehaviorSubject<DecodedToken | null>` for `currentUser$`; derive `isAuthenticated$`
     - Implement `login()`, `register()`, `logout()`, `getToken()`, `initFromStorage()`
     - Decode JWT payload via base64 (middle segment); check `exp` against `Date.now()`
@@ -115,8 +115,8 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     - **Validates: Requirements 4.5**
     - _Uses fast-check 3.22.0; install as devDependency_
 
-- [ ] 13. Implement `AuthInterceptor`
-  - [ ] 13.1 Create `AuthInterceptor` (`HttpInterceptorFn`) in `src/app/core/auth/`
+- [x] 13. Implement `AuthInterceptor`
+  - [x] 13.1 Create `AuthInterceptor` (`HttpInterceptorFn`) in `src/app/core/auth/`
     - Read token from `AuthService.getToken()`; clone request with `Authorization: Bearer <token>` if present
     - On HTTP 401 response, call `AuthService.logout()`
     - Register in `app.config.ts` via `withInterceptors([authInterceptor])`
@@ -126,8 +126,8 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     - **Validates: Requirements 4.4**
     - _Uses fast-check `fc.string()` for token values_
 
-- [ ] 14. Implement `AuthGuard`
-  - [ ] 14.1 Create `AuthGuard` (`CanActivateFn`) in `src/app/core/auth/`
+- [x] 14. Implement `AuthGuard`
+  - [x] 14.1 Create `AuthGuard` (`CanActivateFn`) in `src/app/core/auth/`
     - Unauthenticated on protected route → redirect to `/auth/login?redirectTo=<url>`
     - Authenticated on `/auth/login` or `/auth/register` → redirect to `/`
     - Missing or expired token → clear token, treat as unauthenticated
@@ -137,8 +137,8 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     - **Validates: Requirements 5.1**
     - _Uses fast-check `fc.webPath()` for route paths_
 
-- [ ] 15. Implement `LoginPageComponent`
-  - [ ] 15.1 Create `LoginPageComponent` in `src/app/features/auth/login/`
+- [x] 15. Implement `LoginPageComponent`
+  - [x] 15.1 Create `LoginPageComponent` in `src/app/features/auth/login/`
     - Standalone component; reactive form with `username` and `password` controls
     - Use `p-inputtext` for username, `p-password` for the masked password field, `p-button` with `[loading]` for submit, `p-message` for inline errors
     - Inline validation errors for blank fields (no API call); distinct 401 vs other-error messages
@@ -151,8 +151,8 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     - **Validates: Requirements 6.2**
     - _Uses fast-check `fc.constantFrom('', ' ', '   ')` for blank inputs_
 
-- [ ] 16. Implement `RegisterPageComponent`
-  - [ ] 16.1 Create `RegisterPageComponent` in `src/app/features/auth/register/`
+- [x] 16. Implement `RegisterPageComponent`
+  - [x] 16.1 Create `RegisterPageComponent` in `src/app/features/auth/register/`
     - Standalone component; reactive form with `username`, `email`, `password`, `confirmPassword` controls
     - Use `p-inputtext` for username and email, `p-password` for both password fields (`[feedback]="false"` on confirm), `p-button` with `[loading]` for submit, `p-message` for errors
     - Cross-field validator for password match; inline errors for blank fields (no API call)
@@ -168,12 +168,12 @@ Implement end-to-end user authentication across the Spring Boot backend and Angu
     - **Validates: Requirements 7.3**
     - _Uses fast-check `fc.constantFrom('', ' ', '   ')` and `fc.tuple(fc.string(), fc.string()).filter(([a,b]) => a !== b)`_
 
-- [ ] 17. Wire routes and app configuration
+- [x] 17. Wire routes and app configuration
   - Update `app.routes.ts` with `/auth/login`, `/auth/register` (lazy-loaded), and a protected root route using `AuthGuard`
   - Update `app.config.ts` to register `AuthInterceptor` via `withInterceptors([authInterceptor])` and add `APP_INITIALIZER` for `AuthService.initFromStorage()`
   - _Requirements: 4.2, 5.1, 5.2_
 
-- [ ] 18. Frontend checkpoint — Ensure all tests pass
+- [x] 18. Frontend checkpoint — Ensure all tests pass
   - Ensure all frontend tests pass, ask the user if questions arise.
 
 ## Notes

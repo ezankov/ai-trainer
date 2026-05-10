@@ -1,0 +1,88 @@
+<div class="register-container">
+  <div class="register-card">
+    <h1>Register</h1>
+
+    @if (errorMessage) {
+      <p-message severity="error" [text]="errorMessage"></p-message>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          pInputText
+          formControlName="username"
+          autocomplete="username"
+        />
+        @if (usernameControl.touched && usernameControl.hasError('required')) {
+          <small class="error-text">Username is required.</small>
+        }
+        @if (usernameControl.hasError('serverError')) {
+          <small class="error-text">{{ usernameControl.getError('serverError') }}</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          pInputText
+          formControlName="email"
+          autocomplete="email"
+          type="email"
+        />
+        @if (emailControl.touched && emailControl.hasError('required')) {
+          <small class="error-text">Email is required.</small>
+        }
+        @if (emailControl.hasError('serverError')) {
+          <small class="error-text">{{ emailControl.getError('serverError') }}</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [toggleMask]="true"
+          autocomplete="new-password"
+          styleClass="password-field"
+        ></p-password>
+        @if (passwordControl.touched && passwordControl.hasError('required')) {
+          <small class="error-text">Password is required.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirm Password</label>
+        <p-password
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          [feedback]="false"
+          [toggleMask]="true"
+          autocomplete="new-password"
+          styleClass="password-field"
+        ></p-password>
+        @if (confirmPasswordControl.touched && confirmPasswordControl.hasError('required')) {
+          <small class="error-text">Confirm Password is required.</small>
+        }
+        @if (confirmPasswordControl.touched && registerForm.hasError('passwordMismatch') && !confirmPasswordControl.hasError('required')) {
+          <small class="error-text">Passwords do not match.</small>
+        }
+      </div>
+
+      <p-button
+        type="submit"
+        label="Register"
+        [loading]="loading"
+        [disabled]="loading"
+        styleClass="register-button"
+      ></p-button>
+    </form>
+
+    <p class="login-link">
+      Already have an account? <a routerLink="/auth/login">Login</a>
+    </p>
+  </div>
+</div>

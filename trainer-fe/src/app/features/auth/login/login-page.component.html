@@ -1,0 +1,51 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>Login</h1>
+
+    @if (errorMessage) {
+      <p-message severity="error" [text]="errorMessage"></p-message>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          pInputText
+          formControlName="username"
+          autocomplete="username"
+        />
+        @if (usernameControl.touched && usernameControl.hasError('required')) {
+          <small class="error-text">Username is required.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          autocomplete="current-password"
+          styleClass="password-field"
+        ></p-password>
+        @if (passwordControl.touched && passwordControl.hasError('required')) {
+          <small class="error-text">Password is required.</small>
+        }
+      </div>
+
+      <p-button
+        type="submit"
+        label="Login"
+        [loading]="loading"
+        [disabled]="loading"
+        styleClass="login-button"
+      ></p-button>
+    </form>
+
+    <p class="register-link">
+      Don't have an account? <a routerLink="/auth/register">Register</a>
+    </p>
+  </div>
+</div>

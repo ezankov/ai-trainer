@@ -1,9 +1,9 @@
 spring:
   application:
-    name: backend
+    name: trainer-be
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/personal_ai_trainer?currentSchema=trainer
+    url: jdbc:postgresql://localhost:5432/personal_ai_trainer
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -24,6 +24,11 @@ spring:
     schemas: trainer              # Flyway will create the schema if it doesn't exist
     default-schema: trainer
     baseline-on-migrate: false    # set to true only when migrating an existing schema
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:changeme-this-is-a-dev-only-secret-replace-in-production}
+    expiration-ms: 86400000
 
 server:
   port: 8080
