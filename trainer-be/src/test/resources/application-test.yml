@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    # INIT creates the 'trainer' schema so the User entity (schema="trainer") resolves correctly
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;INIT=CREATE SCHEMA IF NOT EXISTS trainer
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -9,6 +10,14 @@ spring:
     hibernate:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        default_schema: trainer
 
   flyway:
-    enabled: false   # Use Hibernate's ddl-auto in tests; enable if you want Flyway in tests too
+    enabled: false   # Use Hibernate's ddl-auto in tests; Flyway is disabled
+
+app:
+  jwt:
+    secret: test-secret-key-that-is-long-enough-for-hmac-sha256
+    expiration-ms: 86400000
