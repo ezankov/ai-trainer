@@ -74,6 +74,8 @@ Example: `docs/requirements/register-and-authenticate/`
 
 Do not place any of these files inside `.kiro/specs/`. The `.kiro/specs/` directory is for internal Kiro tooling metadata only (e.g. `.config.kiro`).
 
+**Important:** When generating spec documents for a feature, always check `docs/requirements/<feature-name>/` first. If `requirements.md` or `design.md` already exist there, use them as-is — do NOT regenerate or duplicate them. Only generate missing documents (e.g. `tasks.md` if it doesn't exist yet).
+
 ## Database Schema
 
 Current tables (schema: `trainer`):
