@@ -6,13 +6,13 @@ Implement the Athlete Profile feature end-to-end across the Spring Boot backend 
 
 ## Tasks
 
-- [ ] 1. Create Flyway migration and JPA entities
-  - [ ] 1.1 Create Flyway migration `V2__athlete_profile_schema.sql`
+- [x] 1. Create Flyway migration and JPA entities
+  - [x] 1.1 Create Flyway migration `V2__athlete_profile_schema.sql`
     - Create tables: `athlete_profiles`, `hr_profiles`, `hr_zones`, `pace_profiles`, `pace_zones` in the `trainer` schema
     - Include all columns, constraints, foreign keys, and indexes as specified in the design
     - _Requirements: 1.1, 2.1, 4.3, 5.4_
 
-  - [ ] 1.2 Create JPA entities in `com.trainer.profile`
+  - [x] 1.2 Create JPA entities in `com.trainer.profile`
     - Create `AthleteProfile` entity mapped to `trainer.athlete_profiles` with all fields
     - Create `HrProfile` entity mapped to `trainer.hr_profiles` with `@OneToMany` to `HrZone`
     - Create `HrZone` entity mapped to `trainer.hr_zones`
@@ -20,14 +20,14 @@ Implement the Athlete Profile feature end-to-end across the Spring Boot backend 
     - Create `PaceZone` entity mapped to `trainer.pace_zones`
     - _Requirements: 1.1, 4.3, 5.4_
 
-  - [ ] 1.3 Create repositories in `com.trainer.profile`
+  - [x] 1.3 Create repositories in `com.trainer.profile`
     - Create `AthleteProfileRepository` with `findByUserId`, `existsByUserId`
     - Create `HrProfileRepository` with `findByAthleteProfileId`, `deleteByAthleteProfileId`
     - Create `PaceProfileRepository` with `findByAthleteProfileId`, `deleteByAthleteProfileId`
     - _Requirements: 1.1, 2.1, 3.1_
 
-- [ ] 2. Implement zone calculators
-  - [ ] 2.1 Implement `HrZoneCalculator` in `com.trainer.profile`
+- [x] 2. Implement zone calculators
+  - [x] 2.1 Implement `HrZoneCalculator` in `com.trainer.profile`
     - Pure function: `List<HrZone> calculate(int restingHR, int lthr, int maxHR)`
     - Implement 6-zone calculation using LTHR percentage formula from design
     - Ensure adjacent zones share boundary values
@@ -40,7 +40,7 @@ Implement the Athlete Profile feature end-to-end across the Spring Boot backend 
     - **Validates: Requirements 4.5**
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` valid (restingHR, lthr, maxHR) arbitraries_
 
-  - [ ] 2.3 Implement `PaceZoneCalculator` in `com.trainer.profile`
+  - [x] 2.3 Implement `PaceZoneCalculator` in `com.trainer.profile`
     - Pure function: `List<PaceZone> calculate(int thresholdPaceSecondsPerKm)`
     - Convert TP to speed, apply intensity percentages, convert back to pace
     - Cap Zone 1 upper bound at 900, Zone 6 lower bound at 150
@@ -53,17 +53,17 @@ Implement the Athlete Profile feature end-to-end across the Spring Boot backend 
     - **Validates: Requirements 5.5**
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` TP arbitraries in [150, 900]_
 
-- [ ] 3. Checkpoint — Ensure zone calculator tests pass
+- [x] 3. Checkpoint — Ensure zone calculator tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 4. Implement DTOs and validation
-  - [ ] 4.1 Create request/response DTOs in `com.trainer.profile`
+- [x] 4. Implement DTOs and validation
+  - [x] 4.1 Create request/response DTOs in `com.trainer.profile`
     - Create `CreateProfileRequest` record with Bean Validation annotations
     - Create `UpdateProfileRequest` record (same structure as Create)
     - Create `ProfileResponse` record including nested `HrProfileResponse` and `PaceProfileResponse`
     - _Requirements: 1.1, 1.9, 1.10, 1.11, 1.12, 1.14, 2.1, 2.3, 2.4_
 
-  - [ ] 4.2 Implement cross-field validation in `com.trainer.profile`
+  - [x] 4.2 Implement cross-field validation in `com.trainer.profile`
     - Validate `maxHR > restingHR`
     - Validate `lthr > restingHR && lthr <= maxHR` when lthr is provided
     - Validate `dateOfBirth` results in age ≥ 13 and is not in the future
@@ -71,8 +71,8 @@ Implement the Athlete Profile feature end-to-end across the Spring Boot backend 
     - Collect all validation errors and return them in a single 400 response
     - _Requirements: 1.3, 1.7, 1.13, 7.1, 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 5. Implement service layer
-  - [ ] 5.1 Implement `AthleteProfileService` in `com.trainer.profile`
+- [x] 5. Implement service layer
+  - [x] 5.1 Implement `AthleteProfileService` in `com.trainer.profile`
     - `createProfile(Long userId, CreateProfileRequest)`: validate, persist, trigger zone calculation if thresholds present, return 409 if profile exists
     - `getProfile(Long userId)`: fetch profile with zones, return 404 if not found
     - `updateProfile(Long userId, UpdateProfileRequest)`: full replacement, recalculate/delete zones as needed
@@ -87,12 +87,12 @@ Implement the Athlete Profile feature end-to-end across the Spring Boot backend 
     - **Validates: Requirements 3.3**
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` valid profile arbitraries; uses Mockito for repositories_
 
-- [ ] 6. Implement controller and exception handling
-  - [ ] 6.1 Create custom exceptions in `com.trainer.profile`
+- [x] 6. Implement controller and exception handling
+  - [x] 6.1 Create custom exceptions in `com.trainer.profile`
     - Create `ProfileAlreadyExistsException` and `ProfileNotFoundException`
     - _Requirements: 1.2, 2.2, 3.2_
 
-  - [ ] 6.2 Implement `AthleteProfileController` in `com.trainer.profile`
+  - [x] 6.2 Implement `AthleteProfileController` in `com.trainer.profile`
     - `POST /api/athlete-profile` → 201 with created profile
     - `GET /api/athlete-profile` → 200 with profile data
     - `PUT /api/athlete-profile` → 200 with updated profile
@@ -100,7 +100,7 @@ Implement the Athlete Profile feature end-to-end across the Spring Boot backend 
     - Use `@Valid` on request bodies; delegate to `AthleteProfileService`
     - _Requirements: 1.1, 1.15, 2.1, 2.6, 2.7, 3.1_
 
-  - [ ] 6.3 Extend exception handling for profile-specific exceptions
+  - [x] 6.3 Extend exception handling for profile-specific exceptions
     - Handle `ProfileAlreadyExistsException` → 409
     - Handle `ProfileNotFoundException` → 404
     - Handle validation errors with field-level detail
@@ -124,21 +124,21 @@ Implement the Athlete Profile feature end-to-end across the Spring Boot backend 
     - Verify profile isolation (user A cannot access user B's profile)
     - _Requirements: 1.1, 1.2, 1.15, 2.1, 2.2, 2.6, 2.7, 3.1, 3.2, 3.5, 3.6, 3.7, 3.8_
 
-- [ ] 8. Backend checkpoint — Ensure all tests pass
+- [x] 8. Backend checkpoint — Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 9. Implement frontend service and models
-  - [ ] 9.1 Create TypeScript interfaces in `src/app/core/profile/profile.model.ts`
+- [x] 9. Implement frontend service and models
+  - [x] 9.1 Create TypeScript interfaces in `src/app/core/profile/profile.model.ts`
     - Define `ProfileRequest`, `ProfileResponse`, `HrProfileResponse`, `HrZoneResponse`, `PaceProfileResponse`, `PaceZoneResponse`
     - _Requirements: 2.1, 2.3, 2.4_
 
-  - [ ] 9.2 Create `AthleteProfileService` in `src/app/core/profile/`
+  - [x] 9.2 Create `AthleteProfileService` in `src/app/core/profile/`
     - Implement `getProfile()`, `createProfile(data)`, `updateProfile(data)` methods
     - Use `HttpClient` to call `/api/athlete-profile`
     - _Requirements: 1.1, 2.1, 3.1_
 
-- [ ] 10. Implement `ProfilePageComponent`
-  - [ ] 10.1 Create `ProfilePageComponent` in `src/app/features/athlete-profile/`
+- [x] 10. Implement `ProfilePageComponent`
+  - [x] 10.1 Create `ProfilePageComponent` in `src/app/features/athlete-profile/`
     - Standalone component with reactive form for all profile fields
     - Handle create mode (empty form, "Create Profile" button) vs edit mode (pre-populated, "Save Changes" button)
     - Use PrimeNG components: `p-datepicker`, `p-inputnumber`, `p-inputmask`, `p-button`, `p-table`, `p-toast`, `p-progressspinner`, `p-message`
@@ -157,12 +157,12 @@ Implement the Athlete Profile feature end-to-end across the Spring Boot backend 
     - **Validates: Requirements 6.10**
     - _Uses fast-check `fc.integer({ min: 150, max: 900 })` and invalid form state generators_
 
-- [ ] 11. Wire route configuration
-  - [ ] 11.1 Add profile route to `app.routes.ts`
+- [x] 11. Wire route configuration
+  - [x] 11.1 Add profile route to `app.routes.ts`
     - Add `{ path: 'profile', loadComponent: () => import('./features/athlete-profile/profile-page.component'), canActivate: [authGuard] }`
     - _Requirements: 6.1_
 
-- [ ] 12. Final checkpoint — Ensure all tests pass
+- [x] 12. Final checkpoint — Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

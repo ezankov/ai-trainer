@@ -13,12 +13,17 @@ export const routes: Routes = [
     canActivate: [guestGuard],
   },
   {
-    path: '',
+    path: 'profile',
+    loadComponent: () => import('./features/athlete-profile/profile-page.component'),
     canActivate: [authGuard],
-    children: [],
+  },
+  {
+    path: '',
+    redirectTo: 'profile',
+    pathMatch: 'full',
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'profile',
   },
 ];

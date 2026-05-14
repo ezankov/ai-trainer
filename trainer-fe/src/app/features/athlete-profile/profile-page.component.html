@@ -1,0 +1,304 @@
+<p-toast />
+
+<div class="profile-page">
+  <!-- Loading spinner -->
+  @if (loading) {
+    <div class="loading-container">
+      <p-progressspinner />
+    </div>
+  }
+
+  <!-- Profile form -->
+  @if (!loading) {
+    <h1>{{ isEditMode ? 'Edit Profile' : 'Create Profile' }}</h1>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <!-- Biometric Data Section -->
+      <section class="form-section">
+        <h2>Biometric Data</h2>
+
+        <div class="form-grid">
+          <!-- Date of Birth -->
+          <div class="form-field">
+            <label for="dateOfBirth">Date of Birth *</label>
+            <p-datepicker
+              formControlName="dateOfBirth"
+              inputId="dateOfBirth"
+              [maxDate]="maxDate"
+              dateFormat="yy-mm-dd"
+              [showIcon]="true"
+              placeholder="Select date"
+            />
+            @if (profileForm.get('dateOfBirth')?.touched && profileForm.get('dateOfBirth')?.hasError('required')) {
+              <p-message severity="error" text="Date of birth is required." />
+            }
+          </div>
+
+          <!-- Weight -->
+          <div class="form-field">
+            <label for="weightKg">Weight (kg) *</label>
+            <p-inputnumber
+              formControlName="weightKg"
+              inputId="weightKg"
+              [min]="20"
+              [max]="300"
+              [step]="0.1"
+              [minFractionDigits]="0"
+              [maxFractionDigits]="1"
+              mode="decimal"
+              placeholder="e.g. 72.5"
+            />
+            @if (profileForm.get('weightKg')?.touched && profileForm.get('weightKg')?.hasError('required')) {
+              <p-message severity="error" text="Weight is required." />
+            }
+            @if (profileForm.get('weightKg')?.touched && profileForm.get('weightKg')?.hasError('min')) {
+              <p-message severity="error" text="Weight must be at least 20 kg." />
+            }
+            @if (profileForm.get('weightKg')?.touched && profileForm.get('weightKg')?.hasError('max')) {
+              <p-message severity="error" text="Weight must be at most 300 kg." />
+            }
+          </div>
+
+          <!-- Resting HR -->
+          <div class="form-field">
+            <label for="restingHR">Resting Heart Rate (bpm) *</label>
+            <p-inputnumber
+              formControlName="restingHR"
+              inputId="restingHR"
+              [min]="25"
+              [max]="120"
+              placeholder="e.g. 48"
+            />
+            @if (profileForm.get('restingHR')?.touched && profileForm.get('restingHR')?.hasError('required')) {
+              <p-message severity="error" text="Resting HR is required." />
+            }
+            @if (profileForm.get('restingHR')?.touched && profileForm.get('restingHR')?.hasError('min')) {
+              <p-message severity="error" text="Resting HR must be at least 25 bpm." />
+            }
+            @if (profileForm.get('restingHR')?.touched && profileForm.get('restingHR')?.hasError('max')) {
+              <p-message severity="error" text="Resting HR must be at most 120 bpm." />
+            }
+          </div>
+
+          <!-- Max HR -->
+          <div class="form-field">
+            <label for="maxHR">Max Heart Rate (bpm) *</label>
+            <p-inputnumber
+              formControlName="maxHR"
+              inputId="maxHR"
+              [min]="100"
+              [max]="250"
+              placeholder="e.g. 190"
+            />
+            @if (profileForm.get('maxHR')?.touched && profileForm.get('maxHR')?.hasError('required')) {
+              <p-message severity="error" text="Max HR is required." />
+            }
+            @if (profileForm.get('maxHR')?.touched && profileForm.get('maxHR')?.hasError('min')) {
+              <p-message severity="error" text="Max HR must be at least 100 bpm." />
+            }
+            @if (profileForm.get('maxHR')?.touched && profileForm.get('maxHR')?.hasError('max')) {
+              <p-message severity="error" text="Max HR must be at most 250 bpm." />
+            }
+            @if (profileForm.get('maxHR')?.touched && profileForm.hasError('maxHRNotGreaterThanResting')) {
+              <p-message severity="error" text="Max HR must be greater than resting HR." />
+            }
+          </div>
+
+          <!-- LTHR -->
+          <div class="form-field">
+            <label for="lthr">LTHR (bpm)</label>
+            <p-inputnumber
+              formControlName="lthr"
+              inputId="lthr"
+              [min]="100"
+              [max]="250"
+              placeholder="e.g. 168"
+            />
+            @if (profileForm.get('lthr')?.touched && profileForm.get('lthr')?.hasError('min')) {
+              <p-message severity="error" text="LTHR must be at least 100 bpm." />
+            }
+            @if (profileForm.get('lthr')?.touched && profileForm.get('lthr')?.hasError('max')) {
+              <p-message severity="error" text="LTHR must be at most 250 bpm." />
+            }
+            @if (profileForm.get('lthr')?.touched && profileForm.hasError('lthrNotGreaterThanResting')) {
+              <p-message severity="error" text="LTHR must be greater than resting HR." />
+            }
+            @if (profileForm.get('lthr')?.touched && profileForm.hasError('lthrExceedsMaxHR')) {
+              <p-message severity="error" text="LTHR must be less than or equal to max HR." />
+            }
+          </div>
+
+          <!-- Threshold Pace -->
+          <div class="form-field">
+            <label for="thresholdPace">Threshold Pace (MM:SS /km)</label>
+            <p-inputmask
+              formControlName="thresholdPace"
+              inputId="thresholdPace"
+              mask="99:99"
+              placeholder="MM:SS"
+              slotChar="_"
+            />
+          </div>
+
+          <!-- VO2 Max -->
+          <div class="form-field">
+            <label for="vo2Max">VO₂ Max (ml/kg/min)</label>
+            <p-inputnumber
+              formControlName="vo2Max"
+              inputId="vo2Max"
+              [min]="20"
+              [max]="90"
+              [step]="0.1"
+              [minFractionDigits]="0"
+              [maxFractionDigits]="1"
+              mode="decimal"
+              placeholder="e.g. 58.5"
+            />
+            @if (profileForm.get('vo2Max')?.touched && profileForm.get('vo2Max')?.hasError('min')) {
+              <p-message severity="error" text="VO₂ Max must be at least 20.0." />
+            }
+            @if (profileForm.get('vo2Max')?.touched && profileForm.get('vo2Max')?.hasError('max')) {
+              <p-message severity="error" text="VO₂ Max must be at most 90.0." />
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Race Times Section -->
+      <section class="form-section">
+        <h2>Race Times</h2>
+
+        <div class="form-grid">
+          <!-- 5K -->
+          <div class="form-field">
+            <label for="fiveKTime">5K Time (HH:MM:SS)</label>
+            <p-inputmask
+              formControlName="fiveKTime"
+              inputId="fiveKTime"
+              mask="99:99:99"
+              placeholder="HH:MM:SS"
+              slotChar="_"
+            />
+          </div>
+
+          <!-- 10K -->
+          <div class="form-field">
+            <label for="tenKTime">10K Time (HH:MM:SS)</label>
+            <p-inputmask
+              formControlName="tenKTime"
+              inputId="tenKTime"
+              mask="99:99:99"
+              placeholder="HH:MM:SS"
+              slotChar="_"
+            />
+            @if (profileForm.get('tenKTime')?.touched && profileForm.hasError('tenKNotGreaterThan5K')) {
+              <p-message severity="error" text="10K time must be greater than 5K time." />
+            }
+          </div>
+
+          <!-- Half Marathon -->
+          <div class="form-field">
+            <label for="halfMarathonTime">Half Marathon Time (HH:MM:SS)</label>
+            <p-inputmask
+              formControlName="halfMarathonTime"
+              inputId="halfMarathonTime"
+              mask="99:99:99"
+              placeholder="HH:MM:SS"
+              slotChar="_"
+            />
+            @if (profileForm.get('halfMarathonTime')?.touched && profileForm.hasError('halfNotGreaterThan10K')) {
+              <p-message severity="error" text="Half Marathon time must be greater than 10K time." />
+            }
+          </div>
+
+          <!-- Marathon -->
+          <div class="form-field">
+            <label for="marathonTime">Marathon Time (HH:MM:SS)</label>
+            <p-inputmask
+              formControlName="marathonTime"
+              inputId="marathonTime"
+              mask="99:99:99"
+              placeholder="HH:MM:SS"
+              slotChar="_"
+            />
+            @if (profileForm.get('marathonTime')?.touched && profileForm.hasError('marathonNotGreaterThanHalf')) {
+              <p-message severity="error" text="Marathon time must be greater than Half Marathon time." />
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <p-button
+          type="submit"
+          [label]="isEditMode ? 'Save Changes' : 'Create Profile'"
+          [loading]="submitting"
+          [disabled]="submitting"
+        />
+      </div>
+    </form>
+
+    <!-- HR Zones Section -->
+    <section class="zones-section">
+      <h2>Heart Rate Zones</h2>
+
+      @if (hasHrProfile) {
+        <p-table [value]="hrZones" [tableStyle]="{ 'min-width': '30rem' }">
+          <ng-template #header>
+            <tr>
+              <th>Zone</th>
+              <th>Name</th>
+              <th>Lower Bound (bpm)</th>
+              <th>Upper Bound (bpm)</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-zone>
+            <tr>
+              <td>{{ zone.zoneNumber }}</td>
+              <td>{{ zone.name }}</td>
+              <td>{{ zone.lowerBound }}</td>
+              <td>{{ zone.upperBound }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      } @else {
+        <p-message
+          severity="info"
+          text="No HR zones calculated. HR zones will be calculated once an LTHR value is entered."
+        />
+      }
+    </section>
+
+    <!-- Pace Zones Section -->
+    <section class="zones-section">
+      <h2>Pace Zones</h2>
+
+      @if (hasPaceProfile) {
+        <p-table [value]="paceZones" [tableStyle]="{ 'min-width': '30rem' }">
+          <ng-template #header>
+            <tr>
+              <th>Zone</th>
+              <th>Name</th>
+              <th>Lower Bound (MM:SS /km)</th>
+              <th>Upper Bound (MM:SS /km)</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-zone>
+            <tr>
+              <td>{{ zone.zoneNumber }}</td>
+              <td>{{ zone.name }}</td>
+              <td>{{ formatPaceZone(zone.lowerBound) }}</td>
+              <td>{{ formatPaceZone(zone.upperBound) }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      } @else {
+        <p-message
+          severity="info"
+          text="No pace zones calculated. Pace zones will be calculated once a threshold pace is entered."
+        />
+      }
+    </section>
+  }
+</div>

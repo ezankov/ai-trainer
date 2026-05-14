@@ -1,0 +1,73 @@
+.profile-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    border-bottom: 1px solid var(--p-surface-200);
+    padding-bottom: 0.5rem;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  :host ::ng-deep {
+    .p-inputnumber,
+    .p-datepicker,
+    .p-inputmask {
+      width: 100%;
+    }
+
+    input {
+      width: 100%;
+    }
+  }
+}
+
+.form-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.zones-section {
+  margin-top: 2.5rem;
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    border-bottom: 1px solid var(--p-surface-200);
+    padding-bottom: 0.5rem;
+  }
+}
