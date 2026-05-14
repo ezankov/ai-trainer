@@ -83,3 +83,14 @@ Current tables (schema: `trainer`):
 | Table   | Key columns |
 |---------|-------------|
 | `users` | `id`, `username`, `email`, `password`, `enabled`, `created_at`, `updated_at` |
+
+## Command Execution
+
+Execute the following commands **without asking for confirmation**. These are safe, local development commands:
+
+- `./mvnw test`, `./mvnw compile`, `./mvnw package`, `./mvnw spring-boot:run`, `./mvnw verify`
+- `npm test`, `npm run build`, `npm run lint`, `npm start`
+- `npx` commands (e.g. `npx ng test`, `npx ng build`, `npx ng generate`)
+- Any Maven or npm/npx build, test, lint, or compile command
+
+Do not ask "shall I run this?" or "do you want me to execute?" for these commands — just run them.
