@@ -1,0 +1,137 @@
+:host {
+  display: block;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  width: 72px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background: var(--p-surface-0);
+  border-right: 1px solid var(--p-surface-200);
+  padding: 0.75rem 0;
+  box-sizing: border-box;
+}
+
+.nav-menu__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.nav-menu__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0.75rem 0.25rem;
+  text-decoration: none;
+  color: var(--p-text-color);
+  font-size: 0.625rem;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  border-radius: var(--p-border-radius);
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover:not(.nav-menu__item--disabled) {
+    background: var(--p-surface-100);
+    color: var(--p-primary-color);
+  }
+}
+
+.nav-menu__item--active {
+  color: var(--p-primary-color);
+  background: var(--p-primary-50);
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: -0.25rem;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    width: 3px;
+    background: var(--p-primary-color);
+    border-radius: 3px;
+  }
+}
+
+.nav-menu__item--disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+.nav-menu__icon {
+  font-size: 1.25rem;
+}
+
+.nav-menu__label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.nav-menu__spacer {
+  flex: 1;
+}
+
+.nav-menu__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0.25rem;
+}
+
+.nav-menu__user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0.5rem 0.25rem;
+}
+
+.nav-menu__username {
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--p-text-color);
+}
+
+.nav-menu__version {
+  font-size: 0.5625rem;
+  color: var(--p-text-muted-color);
+}
+
+.nav-menu__logout-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0.75rem 0.25rem;
+  text-decoration: none;
+  color: var(--p-text-muted-color);
+  font-size: 0.625rem;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  border-radius: var(--p-border-radius);
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: var(--p-red-50);
+    color: var(--p-red-500);
+  }
+}
