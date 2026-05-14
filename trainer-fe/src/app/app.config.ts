@@ -8,6 +8,8 @@ import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
 import { AuthService } from './core/auth/auth.service';
 import { authInterceptor } from './core/auth/auth.interceptor';
+import { APP_VERSION } from './core/app-version.token';
+import packageJson from '../../package.json';
 
 function initAuth(authService: AuthService): () => void {
   return () => authService.initFromStorage();
@@ -26,5 +28,6 @@ export const appConfig: ApplicationConfig = {
       deps: [AuthService],
       multi: true,
     },
+    { provide: APP_VERSION, useValue: packageJson.version },
   ],
 };
