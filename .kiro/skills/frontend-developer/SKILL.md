@@ -123,7 +123,39 @@ effect(() => {
 
 ---
 
-## 4. Build System & Styling
+## 4. UI Components — PrimeNG First
+
+### Rule: Always Use PrimeNG
+- **PrimeNG is the primary UI component library.** For any UI element (buttons, inputs, dialogs, tables, menus, dropdowns, toasts, calendars, etc.), use the corresponding PrimeNG component.
+- **Do not build custom components for anything PrimeNG already provides.** Check the PrimeNG component catalog first before implementing any UI element.
+- Only implement a custom component when PrimeNG does not offer a suitable component or when the required behavior cannot be achieved by composing/configuring existing PrimeNG components.
+- When customizing PrimeNG component appearance, use PrimeNG's theming API and CSS variable overrides — do not wrap PrimeNG components in unnecessary custom wrappers just for styling.
+
+### PrimeNG Integration
+- `providePrimeNG()` and `provideAnimationsAsync()` are configured in `app.config.ts`.
+- Import PrimeNG component modules directly in the standalone component that uses them.
+
+```typescript
+// ✅ Correct — use PrimeNG directly
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+
+@Component({
+  standalone: true,
+  imports: [ButtonModule, InputTextModule, TableModule],
+  ...
+})
+export class UserListPageComponent { }
+
+// ❌ Forbidden — building a custom button/table/dialog when PrimeNG has one
+@Component({ ... })
+export class CustomButtonComponent { }  // Don't do this
+```
+
+---
+
+## 5. Build System & Styling
 
 ### Build System Constraints
 
@@ -160,7 +192,7 @@ effect(() => {
 
 ---
 
-## 5. Package Layout Summary
+## 6. Package Layout Summary
 
 ```
 src/app/
@@ -180,7 +212,7 @@ src/app/
 
 ---
 
-## 6. Checklist Before Implementing Any Feature
+## 7. Checklist Before Implementing Any Feature
 
 - [ ] Is change detection zoneless? No `zone.js` triggers relied upon.
 - [ ] Is all state managed via Signals? No `BehaviorSubject` for state.
@@ -189,4 +221,5 @@ src/app/
 - [ ] Does the component cross a feature boundary? If yes, use the Event Bus.
 - [ ] Is the component `standalone: true`? No NgModule involved.
 - [ ] Are styles using CSS Variables from the design system? No hardcoded values.
+- [ ] Is PrimeNG used for all standard UI elements? Custom components only where PrimeNG has no equivalent.
 - [ ] Does the feature need a new package or config change? If yes, **ask for approval first**.
