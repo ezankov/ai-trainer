@@ -1,0 +1,7 @@
+package com.trainer.workout;
+
+public enum DurationType {
+    TIME, DISTANCE, HR_LESS_THAN, HR_GREATER_THAN,
+    CALORIES, OPEN, POWER_LESS_THAN, POWER_GREATER_THAN,
+    REPEAT_UNTIL_STEPS_COMPLETE
+}

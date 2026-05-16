@@ -3,6 +3,8 @@ package com.trainer.auth;
 import com.trainer.profile.ProfileAlreadyExistsException;
 import com.trainer.profile.ProfileNotFoundException;
 import com.trainer.profile.ProfileValidationException;
+import com.trainer.workout.WorkoutNotFoundException;
+import com.trainer.workout.WorkoutValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -69,6 +73,54 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleProfileNotFound(ProfileNotFoundException ex) {
         return new ErrorResponse("Athlete profile not found");
+    }
+
+    @ExceptionHandler(WorkoutNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleWorkoutNotFound(WorkoutNotFoundException ex) {
+        return new ErrorResponse("Workout not found");
+    }
+
+    @ExceptionHandler(WorkoutValidationException.class)
+    public ResponseEntity<Map<String, Object>> handleWorkoutValidation(WorkoutValidationException ex) {
+        List<WorkoutValidationException.StepValidationError> errors = ex.getErrors();
+
+        // Special case: workout-level validation error (stepIndex == -1) for invalid sportType/subSport
+        if (errors.size() == 1 && errors.getFirst().stepIndex() == -1) {
+            WorkoutValidationException.StepValidationError error = errors.getFirst();
+            Map<String, Object> body = Map.of(
+                    "message", "Invalid sport type",
+                    "field", error.field()
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+        }
+
+        // Step-level validation errors
+        List<Map<String, Object>> errorList = errors.stream()
+                .map(e -> Map.<String, Object>of(
+                        "stepIndex", e.stepIndex(),
+                        "field", e.field(),
+                        "message", e.message()
+                ))
+                .toList();
+
+        Map<String, Object> body = Map.of(
+                "message", "Workout step validation failed",
+                "errors", errorList
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        if (UUID.class.equals(ex.getRequiredType())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("Invalid identifier format"));
+        }
+        // For non-UUID type mismatches, return a generic bad request
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse("Invalid parameter format"));
     }
 
     @ExceptionHandler({BadCredentialsException.class, DisabledException.class, UsernameNotFoundException.class})

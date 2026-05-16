@@ -6,8 +6,8 @@ Implement the Workouts feature as a backend-only REST API under `/api/workouts`.
 
 ## Tasks
 
-- [ ] 1. Create Flyway migration and JPA entities
-  - [ ] 1.1 Create Flyway migration `V3__workout_schema.sql`
+- [x] 1. Create Flyway migration and JPA entities
+  - [x] 1.1 Create Flyway migration `V3__workout_schema.sql`
     - Create `trainer.workouts` table with columns: id (UUID PK), user_id (BIGINT FK → trainer.users), name (VARCHAR 50), sport_type (VARCHAR 20), sub_sport (VARCHAR 30 nullable), num_valid_steps (INTEGER CHECK > 0), created_at (TIMESTAMPTZ), updated_at (TIMESTAMPTZ)
     - Create `trainer.workout_steps` table with columns: id (UUID PK), workout_id (UUID FK → trainer.workouts ON DELETE CASCADE), step_order (INTEGER CHECK >= 0), step_name (VARCHAR 50 nullable), intensity (VARCHAR 20), duration_type (VARCHAR 40), duration_value (INTEGER nullable), target_type (VARCHAR 20), target_value_low (INTEGER nullable), target_value_high (INTEGER nullable), notes (VARCHAR 255 nullable)
     - Add UNIQUE constraint on (workout_id, step_order)
@@ -15,7 +15,7 @@ Implement the Workouts feature as a backend-only REST API under `/api/workouts`.
     - Create index `idx_workout_steps_workout_id` on `trainer.workout_steps(workout_id)`
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.8, 6.9_
 
-  - [ ] 1.2 Create enumerations in `com.trainer.workout`
+  - [x] 1.2 Create enumerations in `com.trainer.workout`
     - Create `SportType` enum: RUNNING, CYCLING, SWIMMING, OTHER
     - Create `SubSport` enum: GENERIC, TREADMILL, TRAIL, TRACK, OPEN_WATER, LAP_SWIMMING
     - Create `Intensity` enum: ACTIVE, REST, WARMUP, COOLDOWN, RECOVERY, INTERVAL
@@ -23,19 +23,19 @@ Implement the Workouts feature as a backend-only REST API under `/api/workouts`.
     - Create `TargetType` enum: SPEED, HEART_RATE, CADENCE, POWER, OPEN
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [ ] 1.3 Create JPA entities in `com.trainer.workout`
+  - [x] 1.3 Create JPA entities in `com.trainer.workout`
     - Create `Workout` entity mapped to `trainer.workouts` with UUID id, userId, name, sportType, subSport, numValidSteps, steps (OneToMany cascade ALL, orphanRemoval), createdAt, updatedAt, @PrePersist/@PreUpdate lifecycle callbacks
     - Create `WorkoutStep` entity mapped to `trainer.workout_steps` with UUID id, workout (ManyToOne LAZY), stepOrder, stepName, intensity, durationType, durationValue, targetType, targetValueLow, targetValueHigh, notes
     - Add UNIQUE constraint annotation on (workout_id, step_order)
     - _Requirements: 6.1, 6.2, 6.6, 6.7_
 
-  - [ ] 1.4 Create repositories in `com.trainer.workout`
+  - [x] 1.4 Create repositories in `com.trainer.workout`
     - Create `WorkoutRepository` extending `JpaRepository<Workout, UUID>` with methods: `findByUserIdOrderByCreatedAtDesc`, `findByUserIdAndSportTypeOrderByCreatedAtDesc`, `findByIdAndUserId`
     - Create `WorkoutStepRepository` extending `JpaRepository<WorkoutStep, UUID>` with method: `deleteByWorkoutId`
     - _Requirements: 3.1, 3.2, 3.6_
 
-- [ ] 2. Implement validation layer
-  - [ ] 2.1 Implement `WorkoutStepValidator` in `com.trainer.workout`
+- [x] 2. Implement validation layer
+  - [x] 2.1 Implement `WorkoutStepValidator` in `com.trainer.workout`
     - Create Spring `@Component` with method `validate(List<WorkoutStepRequest> steps)` that throws `WorkoutValidationException`
     - Implement duration value range checks: TIME [1000, 86400000], DISTANCE [1, 100000000], CALORIES [1, 10000], OPEN accepts null/zero, HR_LESS_THAN/HR_GREATER_THAN [0, 100] ∪ [101, 350], POWER_LESS_THAN/POWER_GREATER_THAN [0, 1000] ∪ [1001, 2500]
     - Implement target value range checks: SPEED [1, 100000], HEART_RATE [0, 100] ∪ [101, 350], CADENCE [0, 255], POWER [0, 1000] ∪ [1001, 2500], OPEN accepts null
@@ -69,11 +69,11 @@ Implement the Workouts feature as a backend-only REST API under `/api/workouts`.
     - Generate step lists containing nested repeat structures and verify validation throws indicating nested repeats not supported
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` arbitraries for nested repeat step lists_
 
-- [ ] 3. Checkpoint — Ensure validation tests pass
+- [x] 3. Checkpoint — Ensure validation tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 4. Implement DTOs and service layer
-  - [ ] 4.1 Create request/response DTOs in `com.trainer.workout`
+- [x] 4. Implement DTOs and service layer
+  - [x] 4.1 Create request/response DTOs in `com.trainer.workout`
     - Create `CreateWorkoutRequest` record with Bean Validation: @NotBlank @Size(max=50) name, @NotNull sportType, optional subSport, @NotEmpty @Size(max=50) @Valid steps
     - Create `UpdateWorkoutRequest` record (same structure as CreateWorkoutRequest)
     - Create `WorkoutStepRequest` record with: optional @Size(max=50) stepName, @NotNull intensity, @NotNull durationType, nullable durationValue, @NotNull targetType, nullable targetValueLow, nullable targetValueHigh, optional @Size(max=255) notes
@@ -82,7 +82,7 @@ Implement the Workouts feature as a backend-only REST API under `/api/workouts`.
     - Create `WorkoutStepResponse` record with: id, stepOrder, stepName, intensity, durationType, durationValue, targetType, targetValueLow, targetValueHigh, notes
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.17, 2.18, 3.1, 3.2_
 
-  - [ ] 4.2 Implement `WorkoutService` in `com.trainer.workout`
+  - [x] 4.2 Implement `WorkoutService` in `com.trainer.workout`
     - `createWorkout(Long userId, CreateWorkoutRequest)`: parse enums, validate steps via WorkoutStepValidator, persist Workout + steps, set numValidSteps, return WorkoutResponse (201)
     - `getWorkouts(Long userId, SportType sportType)`: return list of WorkoutSummaryResponse ordered by createdAt desc, optionally filtered by sportType
     - `getWorkout(Long userId, UUID workoutId)`: return full WorkoutResponse with steps, throw WorkoutNotFoundException if not found/not owned
@@ -109,13 +109,13 @@ Implement the Workouts feature as a backend-only REST API under `/api/workouts`.
     - For any existing workout with M steps, updating with N new steps results in exactly N steps matching submitted data with no remnants
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` arbitraries for original and replacement step lists_
 
-- [ ] 5. Implement controller and exception handling
-  - [ ] 5.1 Create custom exceptions in `com.trainer.workout`
+- [x] 5. Implement controller and exception handling
+  - [x] 5.1 Create custom exceptions in `com.trainer.workout`
     - Create `WorkoutNotFoundException` (maps to 404)
     - Create `WorkoutValidationException` carrying a list of step-level errors (stepIndex, field, message)
     - _Requirements: 3.3, 3.4, 4.4, 4.5, 5.2, 5.3_
 
-  - [ ] 5.2 Implement `WorkoutController` in `com.trainer.workout`
+  - [x] 5.2 Implement `WorkoutController` in `com.trainer.workout`
     - `POST /api/workouts` → @Valid CreateWorkoutRequest → 201 with WorkoutResponse
     - `GET /api/workouts` → optional @RequestParam sportType → 200 with List<WorkoutSummaryResponse>
     - `GET /api/workouts/{id}` → 200 with WorkoutResponse or 404
@@ -126,7 +126,7 @@ Implement the Workouts feature as a backend-only REST API under `/api/workouts`.
     - Handle invalid sportType query parameter → 400
     - _Requirements: 1.1, 1.11, 3.1, 3.2, 3.4, 3.5, 3.7, 4.1, 4.7, 4.8, 5.1, 5.4, 5.5_
 
-  - [ ] 5.3 Extend `GlobalExceptionHandler` for workout exceptions
+  - [x] 5.3 Extend `GlobalExceptionHandler` for workout exceptions
     - Handle `WorkoutNotFoundException` → 404 with `{ "message": "Workout not found" }`
     - Handle `WorkoutValidationException` → 400 with step-level error details (stepIndex, field, message)
     - Handle `MethodArgumentTypeMismatchException` for UUID → 400 with `{ "message": "Invalid identifier format" }`
@@ -139,7 +139,7 @@ Implement the Workouts feature as a backend-only REST API under `/api/workouts`.
     - For any workout request with exactly one invalid workout-level field (blank/oversized name, invalid sportType, invalid subSport, empty/>50 steps), verify HTTP 400
     - _Uses jqwik `@Property(tries = 100)` with MockMvc; arbitraries for single-field-invalid payloads_
 
-- [ ] 6. Checkpoint — Ensure all backend tests pass
+- [x] 6. Checkpoint — Ensure all backend tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 7. Write backend integration tests
@@ -173,7 +173,7 @@ Implement the Workouts feature as a backend-only REST API under `/api/workouts`.
     - For any existing workout, after delete, GET returns 404 and no WorkoutStep records exist for that workout
     - _Uses jqwik `@Property(tries = 100)` with create-then-delete verification_
 
-- [ ] 8. Final checkpoint — Ensure all tests pass
+- [x] 8. Final checkpoint — Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes
