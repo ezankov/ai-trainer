@@ -1,0 +1,211 @@
+.week-card {
+  border: 1px solid var(--p-surface-200);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    background: var(--p-surface-0);
+    user-select: none;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: var(--p-surface-100);
+    }
+  }
+
+  &__summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--p-surface-900);
+  }
+
+  &__dates {
+    font-size: 0.8rem;
+    color: var(--p-surface-600);
+    background: var(--p-surface-100);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  &__meta {
+    color: var(--p-surface-600);
+    font-size: 0.875rem;
+  }
+
+  &__types {
+    color: var(--p-surface-500);
+    font-size: 0.875rem;
+    font-style: italic;
+  }
+
+  &__chevron {
+    font-size: 0.875rem;
+    color: var(--p-surface-500);
+    transition: transform 0.3s ease;
+  }
+
+  &__body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 1.25rem;
+  }
+
+  &--expanded &__body {
+    max-height: 5000px;
+    padding: 0 1.25rem 1.25rem;
+  }
+
+  &__workouts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--p-surface-200);
+  }
+}
+
+.workout-entry {
+  border: 1px solid var(--p-surface-200);
+  border-radius: 6px;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--p-surface-0);
+    border-bottom: 1px solid var(--p-surface-100);
+  }
+
+  &__day {
+    color: var(--p-surface-700);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+
+  &__name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--p-surface-900);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__steps {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    background: var(--p-surface-0);
+  }
+}
+
+// Regular step row
+.step-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--p-surface-50);
+  font-size: 0.85rem;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &__name {
+    font-weight: 500;
+    min-width: 100px;
+    color: var(--p-surface-800);
+  }
+
+  &__duration {
+    color: var(--p-surface-700);
+    min-width: 70px;
+  }
+
+  &__target {
+    color: var(--p-surface-600);
+    font-size: 0.8rem;
+  }
+
+  // Repeat header row — shows "Repeat ×4" with an icon
+  &--repeat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0;
+    margin-top: 0.25rem;
+    border-bottom: none;
+    font-weight: 600;
+    color: var(--p-primary-color);
+    font-size: 0.85rem;
+  }
+
+  &__repeat-icon {
+    font-size: 0.85rem;
+    color: var(--p-primary-color);
+  }
+
+  &__repeat-label {
+    font-weight: 600;
+    color: var(--p-primary-color);
+  }
+
+  // Grouped steps inside a repeat block — indented with left border
+  &--grouped {
+    margin-left: 1rem;
+    padding-left: 0.75rem;
+    border-left: 3px solid var(--p-primary-200);
+    border-bottom: none;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+}
+
+// Intensity color coding
+.intensity--warmup {
+  color: var(--p-orange-600);
+}
+
+.intensity--cooldown {
+  color: var(--p-blue-600);
+}
+
+.intensity--interval {
+  color: var(--p-red-600);
+  font-weight: 600;
+}
+
+.intensity--recovery {
+  color: var(--p-green-600);
+}
+
+.intensity--rest {
+  color: var(--p-surface-500);
+}
+
+.intensity--active {
+  color: var(--p-surface-800);
+}

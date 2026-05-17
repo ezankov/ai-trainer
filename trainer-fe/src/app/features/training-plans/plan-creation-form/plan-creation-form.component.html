@@ -1,0 +1,173 @@
+<p-toast />
+
+<p-dialog
+  header="Create Training Plan"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '500px' }"
+  (onHide)="closeDialog()"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <!-- Event Name -->
+      <div class="form-field">
+        <label for="eventName">Event Name</label>
+        <input
+          pInputText
+          id="eventName"
+          formControlName="eventName"
+          placeholder="e.g., London Marathon 2025"
+          [maxlength]="100"
+          class="w-full"
+        />
+        @if (isFieldInvalid('eventName')) {
+          <small class="form-error">
+            @if (form.get('eventName')?.errors?.['required']) {
+              Event name is required
+            } @else if (form.get('eventName')?.errors?.['maxlength']) {
+              Event name must not exceed 100 characters
+            }
+          </small>
+        }
+      </div>
+
+      <!-- Distance -->
+      <div class="form-field">
+        <label for="distance">Distance</label>
+        <p-select
+          id="distance"
+          formControlName="distance"
+          [options]="distanceOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select distance"
+          styleClass="w-full"
+        />
+        @if (isFieldInvalid('distance')) {
+          <small class="form-error">Distance is required</small>
+        }
+      </div>
+
+      <!-- Duration -->
+      <div class="form-field">
+        <label for="duration">Duration</label>
+        <p-select
+          id="duration"
+          formControlName="duration"
+          [options]="durationOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select duration"
+          styleClass="w-full"
+        />
+        @if (isFieldInvalid('duration')) {
+          <small class="form-error">Duration is required</small>
+        }
+      </div>
+
+      <!-- Race Date -->
+      <div class="form-field">
+        <label for="raceDate">Race Date</label>
+        <p-datepicker
+          id="raceDate"
+          formControlName="raceDate"
+          [minDate]="minDate"
+          dateFormat="dd/mm/yy"
+          placeholder="Select race date"
+          styleClass="w-full"
+          [showIcon]="true"
+        />
+        @if (isFieldInvalid('raceDate')) {
+          <small class="form-error">Race date is required and must be in the future</small>
+        }
+      </div>
+
+      <!-- Target Pace -->
+      <div class="form-field">
+        <label for="targetPace">Target Pace (MM:SS/km)</label>
+        <input
+          pInputText
+          id="targetPace"
+          formControlName="targetPace"
+          placeholder="e.g., 5:00"
+          class="w-full"
+        />
+        @if (isFieldInvalid('targetPace') || isPaceInvalid()) {
+          <small class="form-error">{{ getPaceErrorMessage() }}</small>
+        }
+      </div>
+
+      <!-- AI Model -->
+      <div class="form-field">
+        <label for="aiModel">AI Model</label>
+        <p-select
+          id="aiModel"
+          formControlName="aiModel"
+          [options]="aiModelOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select AI model"
+          styleClass="w-full"
+        />
+        @if (isFieldInvalid('aiModel')) {
+          <small class="form-error">AI model is required</small>
+        }
+      </div>
+
+      <!-- Training Days -->
+      <div class="form-field">
+        <label for="trainingDays">Training Days</label>
+        <p-multiselect
+          id="trainingDays"
+          formControlName="trainingDays"
+          [options]="trainingDayOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select training days"
+          styleClass="w-full"
+          (onChange)="onTrainingDaysChange()"
+        />
+        @if (isFieldInvalid('trainingDays')) {
+          <small class="form-error">At least one training day is required</small>
+        }
+      </div>
+
+      <!-- Long Run Day -->
+      <div class="form-field">
+        <label for="longRunDay">Long Run Day</label>
+        <p-select
+          id="longRunDay"
+          formControlName="longRunDay"
+          [options]="longRunDayOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select long run day"
+          styleClass="w-full"
+          [disabled]="isLongRunDayDisabled()"
+        />
+        @if (isFieldInvalid('longRunDay')) {
+          <small class="form-error">Long run day is required</small>
+        }
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <p-button
+        label="Cancel"
+        [outlined]="true"
+        severity="secondary"
+        (onClick)="closeDialog()"
+        [disabled]="loading()"
+      />
+      <p-button
+        label="Create Plan"
+        type="submit"
+        icon="pi pi-check"
+        [loading]="loading()"
+        [disabled]="loading()"
+      />
+    </div>
+  </form>
+</p-dialog>

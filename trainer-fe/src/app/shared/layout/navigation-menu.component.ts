@@ -33,12 +33,14 @@ export interface MenuItem {
           <span class="nav-menu__label">Profile</span>
         </a>
 
-        <div class="nav-menu__item nav-menu__item--disabled"
-             pTooltip="Coming soon"
-             tooltipPosition="right">
+        <a class="nav-menu__item"
+           routerLink="/plans"
+           routerLinkActive="nav-menu__item--active"
+           pTooltip="Training Plans"
+           tooltipPosition="right">
           <i class="pi pi-calendar nav-menu__icon"></i>
-          <span class="nav-menu__label">Plans</span>
-        </div>
+          <span class="nav-menu__label">Training Plans</span>
+        </a>
       </div>
 
       <div class="nav-menu__spacer"></div>
@@ -77,7 +79,7 @@ export class NavigationMenuComponent {
 
   readonly menuItems: MenuItem[] = [
     { label: 'Profile', icon: 'pi-user', routerLink: '/profile' },
-    { label: 'Plans', icon: 'pi-calendar', disabled: true },
+    { label: 'Training Plans', icon: 'pi-calendar', routerLink: '/plans' },
   ];
 
   logout(): void {

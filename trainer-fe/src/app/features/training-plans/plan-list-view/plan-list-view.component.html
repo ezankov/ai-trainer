@@ -1,0 +1,68 @@
+<p-toast />
+<p-confirmDialog />
+
+<div class="plan-list-view">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="plan-list-view__loading">
+      <p-progressSpinner />
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && plans().length === 0) {
+    <div class="plan-list-view__empty">
+      <p class="plan-list-view__empty-message">No plans yet</p>
+      <p-button
+        label="Create Plan"
+        icon="pi pi-plus"
+        (onClick)="onCreatePlan()"
+      />
+    </div>
+  }
+
+  <!-- Plan List -->
+  @if (!loading() && plans().length > 0) {
+    <div class="plan-list-view__list">
+      @for (plan of plans(); track plan.id) {
+        <div class="plan-list-view__card">
+          <div class="plan-list-view__card-content">
+            <div class="plan-list-view__card-header">
+              <h3 class="plan-list-view__event-name">{{ plan.eventName }}</h3>
+              <p-tag
+                [value]="plan.state"
+                [severity]="getStateSeverity(plan.state)"
+              />
+            </div>
+            <div class="plan-list-view__card-details">
+              <span class="plan-list-view__detail">{{ formatDistance(plan.distance) }}</span>
+              <span class="plan-list-view__detail-separator">·</span>
+              <span class="plan-list-view__detail">{{ formatDuration(plan.duration) }}</span>
+              <span class="plan-list-view__detail-separator">·</span>
+              <span class="plan-list-view__detail">{{ formatRaceDate(plan.raceDate) }}</span>
+            </div>
+          </div>
+          <div class="plan-list-view__card-actions">
+            <p-button
+              label="Activate"
+              icon="pi pi-play"
+              [outlined]="true"
+              [disabled]="isActivateDisabled(plan)"
+              [loading]="isPlanLoading(plan.id)"
+              (onClick)="confirmActivate(plan)"
+            />
+            <p-button
+              label="Delete"
+              icon="pi pi-trash"
+              severity="danger"
+              [outlined]="true"
+              [disabled]="isDeleteDisabled(plan)"
+              [loading]="isPlanLoading(plan.id)"
+              (onClick)="confirmDelete(plan)"
+            />
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

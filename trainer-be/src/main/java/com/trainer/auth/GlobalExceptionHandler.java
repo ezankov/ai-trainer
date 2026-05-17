@@ -3,6 +3,9 @@ package com.trainer.auth;
 import com.trainer.profile.ProfileAlreadyExistsException;
 import com.trainer.profile.ProfileNotFoundException;
 import com.trainer.profile.ProfileValidationException;
+import com.trainer.trainingplan.InvalidStateTransitionException;
+import com.trainer.trainingplan.PlanSchedulingException;
+import com.trainer.trainingplan.TrainingPlanNotFoundException;
 import com.trainer.workout.WorkoutNotFoundException;
 import com.trainer.workout.WorkoutValidationException;
 import org.springframework.http.HttpStatus;
@@ -121,6 +124,30 @@ public class GlobalExceptionHandler {
         // For non-UUID type mismatches, return a generic bad request
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse("Invalid parameter format"));
+    }
+
+    @ExceptionHandler(TrainingPlanNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleTrainingPlanNotFound(TrainingPlanNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidStateTransitionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidStateTransition(InvalidStateTransitionException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(PlanSchedulingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlePlanScheduling(PlanSchedulingException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIllegalArgument(IllegalArgumentException ex) {
+        return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler({BadCredentialsException.class, DisabledException.class, UsernameNotFoundException.class})

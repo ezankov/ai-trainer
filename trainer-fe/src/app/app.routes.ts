@@ -18,6 +18,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'plans',
+    loadComponent: () => import('./features/training-plans/plans-page.component'),
+    canActivate: [authGuard],
+  },
+  {
     path: '',
     redirectTo: 'profile',
     pathMatch: 'full',

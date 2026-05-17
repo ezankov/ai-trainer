@@ -9,7 +9,7 @@
   height: 100vh;
   position: sticky;
   top: 0;
-  background: var(--p-surface-0);
+  background: var(--p-surface-50);
   border-right: 1px solid var(--p-surface-200);
   padding: 0.75rem 0;
   box-sizing: border-box;
@@ -31,7 +31,7 @@
   gap: 4px;
   padding: 0.75rem 0.25rem;
   text-decoration: none;
-  color: var(--p-text-color);
+  color: var(--p-surface-700);
   font-size: 0.625rem;
   cursor: pointer;
   border: none;
@@ -41,14 +41,15 @@
   transition: background-color 0.2s, color 0.2s;
 
   &:hover:not(.nav-menu__item--disabled) {
-    background: var(--p-surface-100);
+    background: var(--p-surface-200);
     color: var(--p-primary-color);
   }
 }
 
 .nav-menu__item--active {
   color: var(--p-primary-color);
-  background: var(--p-primary-50);
+  background: var(--p-surface-0);
+  font-weight: 600;
 
   &::after {
     content: '';
