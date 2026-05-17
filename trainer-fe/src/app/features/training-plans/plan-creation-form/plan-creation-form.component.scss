@@ -1,0 +1,35 @@
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1rem 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--p-text-color);
+  }
+}
+
+.form-error {
+  color: var(--p-red-500);
+  font-size: 0.75rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--p-surface-200);
+}
+
+.w-full {
+  width: 100%;
+}

@@ -1,0 +1,30 @@
+<div class="plans-page">
+  <div class="plans-page__header">
+    <h1>Training Plans</h1>
+    <p-button
+      label="Create Plan"
+      icon="pi pi-plus"
+      (onClick)="openCreateDialog()"
+    />
+  </div>
+
+  <p-tabs [value]="activeTab" (valueChange)="onTabChange($event)">
+    <p-tablist>
+      <p-tab value="0">Active Plan</p-tab>
+      <p-tab value="1">My Plans</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        <app-active-plan-view #activePlanView (createPlanRequested)="openCreateDialog()" />
+      </p-tabpanel>
+      <p-tabpanel value="1">
+        <app-plan-list-view (createPlanRequested)="openCreateDialog()" (planActivated)="activePlanView.loadActivePlan()" />
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</div>
+
+<app-plan-creation-form
+  [(visible)]="showCreateDialog"
+  (planCreated)="onPlanCreated()"
+/>

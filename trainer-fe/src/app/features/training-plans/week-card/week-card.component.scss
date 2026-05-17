@@ -1,0 +1,107 @@
+.week-card {
+  border: 1px solid var(--p-surface-200);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    background: var(--p-surface-0);
+    user-select: none;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: var(--p-surface-50);
+    }
+  }
+
+  &__summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  &__meta {
+    color: var(--p-text-muted-color);
+    font-size: 0.875rem;
+  }
+
+  &__types {
+    color: var(--p-text-muted-color);
+    font-size: 0.875rem;
+    font-style: italic;
+  }
+
+  &__chevron {
+    font-size: 0.875rem;
+    color: var(--p-text-muted-color);
+    transition: transform 0.3s ease;
+  }
+
+  &__body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 1.25rem;
+  }
+
+  &--expanded &__body {
+    max-height: 1000px;
+    padding: 0 1.25rem 1rem;
+  }
+
+  &__workouts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--p-surface-100);
+  }
+}
+
+.workout-entry {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--p-surface-50);
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: var(--p-surface-100);
+  }
+
+  &__name {
+    font-weight: 500;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__day {
+    color: var(--p-text-muted-color);
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  &__summary {
+    color: var(--p-text-muted-color);
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+}

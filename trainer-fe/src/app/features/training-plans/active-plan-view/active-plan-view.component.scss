@@ -1,0 +1,71 @@
+.active-plan-view {
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem;
+    text-align: center;
+  }
+
+  &__empty-message {
+    font-size: 1.125rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__header {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+  }
+
+  &__event-name {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  &__metadata {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+
+  &__metadata-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    color: var(--text-color-secondary);
+    font-weight: 500;
+  }
+
+  &__value {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  &__weeks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}

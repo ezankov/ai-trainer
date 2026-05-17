@@ -1,0 +1,69 @@
+<p-toast />
+
+<div class="active-plan-view">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="active-plan-view__loading">
+      <p-progressSpinner />
+    </div>
+  }
+
+  <!-- No Active Plan State -->
+  @if (!loading() && noPlanExists()) {
+    <div class="active-plan-view__empty">
+      <p class="active-plan-view__empty-message">No active training plan</p>
+      <p-button
+        label="Create Plan"
+        icon="pi pi-plus"
+        (onClick)="onCreatePlan()"
+      />
+    </div>
+  }
+
+  <!-- Active Plan Display -->
+  @if (!loading() && plan()) {
+    <div class="active-plan-view__content">
+      <!-- Metadata Header -->
+      <div class="active-plan-view__header">
+        <h2 class="active-plan-view__event-name">{{ plan()!.eventName }}</h2>
+        <div class="active-plan-view__metadata">
+          <div class="active-plan-view__metadata-item">
+            <span class="active-plan-view__label">Distance</span>
+            <span class="active-plan-view__value">{{ formattedDistance }}</span>
+          </div>
+          <div class="active-plan-view__metadata-item">
+            <span class="active-plan-view__label">Duration</span>
+            <span class="active-plan-view__value">{{ formattedDuration }}</span>
+          </div>
+          <div class="active-plan-view__metadata-item">
+            <span class="active-plan-view__label">Race Date</span>
+            <span class="active-plan-view__value">{{ formattedRaceDate }}</span>
+          </div>
+          <div class="active-plan-view__metadata-item">
+            <span class="active-plan-view__label">Target Pace</span>
+            <span class="active-plan-view__value">{{ formattedPace }}/km</span>
+          </div>
+          <div class="active-plan-view__metadata-item">
+            <span class="active-plan-view__label">Training Days</span>
+            <span class="active-plan-view__value">{{ formattedTrainingDays }}</span>
+          </div>
+          <div class="active-plan-view__metadata-item">
+            <span class="active-plan-view__label">Long Run</span>
+            <span class="active-plan-view__value">{{ formattedLongRunDay }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Week Cards -->
+      <div class="active-plan-view__weeks">
+        @for (week of plan()!.weeks; track week.weekNumber) {
+          <app-week-card
+            [week]="week"
+            [expanded]="expandedWeek() === week.weekNumber"
+            (expand)="toggleWeek(week.weekNumber)"
+          />
+        }
+      </div>
+    </div>
+  }
+</div>

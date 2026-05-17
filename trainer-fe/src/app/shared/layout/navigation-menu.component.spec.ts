@@ -86,34 +86,32 @@ describe('NavigationMenuComponent', () => {
     expect(profileItem.getAttribute('routerLink')).toBe('/profile');
   });
 
-  it('should render Plans item with icon, label, and disabled styling', () => {
-    const disabledItem = fixture.nativeElement.querySelector('.nav-menu__item--disabled');
-    expect(disabledItem).toBeTruthy();
+  it('should render Training Plans item with icon, label, and routerLink to /plans', () => {
+    const plansItem = fixture.nativeElement.querySelector('a[routerLink="/plans"]');
+    expect(plansItem).toBeTruthy();
 
-    const icon = disabledItem.querySelector('i.pi.pi-calendar');
+    const icon = plansItem.querySelector('i.pi.pi-calendar');
     expect(icon).toBeTruthy();
 
-    const label = disabledItem.querySelector('span');
-    expect(label.textContent.trim()).toBe('Plans');
+    const label = plansItem.querySelector('span');
+    expect(label.textContent.trim()).toBe('Training Plans');
   });
 
-  it('should have Plans item as non-interactive (pointer-events: none)', () => {
-    const disabledItem = fixture.nativeElement.querySelector('.nav-menu__item--disabled');
-    expect(disabledItem).toBeTruthy();
-    // The disabled class applies pointer-events: none via component styles.
-    // Verify the element has the disabled class and is a non-interactive div (not an anchor/button).
-    expect(disabledItem.classList.contains('nav-menu__item--disabled')).toBeTrue();
-    expect(disabledItem.tagName.toLowerCase()).toBe('div');
+  it('should have Training Plans item as an enabled clickable link', () => {
+    const plansItem = fixture.nativeElement.querySelector('a[routerLink="/plans"]');
+    expect(plansItem).toBeTruthy();
+    expect(plansItem.tagName.toLowerCase()).toBe('a');
+    expect(plansItem.getAttribute('routerLink')).toBe('/plans');
   });
 
-  it('should position Plans item between Profile and Logout', () => {
+  it('should position Training Plans item between Profile and Logout', () => {
     const items = fixture.nativeElement.querySelector('.nav-menu__items');
     const children = items.children;
 
     // First item should be Profile (the <a> with routerLink)
     expect(children[0].getAttribute('routerLink')).toBe('/profile');
-    // Second item should be Plans (the disabled div)
-    expect(children[1].classList.contains('nav-menu__item--disabled')).toBeTrue();
+    // Second item should be Training Plans (the <a> with routerLink /plans)
+    expect(children[1].getAttribute('routerLink')).toBe('/plans');
 
     // Logout should be in the footer, after the spacer
     const footer = fixture.nativeElement.querySelector('.nav-menu__footer');

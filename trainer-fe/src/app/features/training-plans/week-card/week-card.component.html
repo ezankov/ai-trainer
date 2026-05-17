@@ -1,0 +1,24 @@
+<div class="week-card" [class.week-card--expanded]="expanded">
+  <div class="week-card__header" (click)="onHeaderClick()">
+    <div class="week-card__summary">
+      <span class="week-card__title">Week {{ week.weekNumber }}</span>
+      <span class="week-card__meta">
+        {{ workoutCount }} workout{{ workoutCount !== 1 ? 's' : '' }}
+      </span>
+      <span class="week-card__types">{{ distinctWorkoutTypes }}</span>
+    </div>
+    <span class="week-card__chevron pi" [class.pi-chevron-down]="!expanded" [class.pi-chevron-up]="expanded"></span>
+  </div>
+
+  <div class="week-card__body">
+    <div class="week-card__workouts">
+      @for (entry of sortedWorkouts; track entry.workout.id + '-' + entry.dayOfWeek + '-' + entry.orderInDay) {
+        <div class="workout-entry">
+          <div class="workout-entry__name">{{ entry.workout.name }}</div>
+          <div class="workout-entry__day">{{ getDayName(entry.dayOfWeek) }}</div>
+          <div class="workout-entry__summary">{{ getWorkoutSummary(entry) }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
