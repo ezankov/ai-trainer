@@ -2,6 +2,9 @@
   <div class="week-card__header" (click)="onHeaderClick()">
     <div class="week-card__summary">
       <span class="week-card__title">Week {{ week.weekNumber }}</span>
+      @if (formattedDateRange) {
+        <span class="week-card__dates">{{ formattedDateRange }}</span>
+      }
       <span class="week-card__meta">
         {{ workoutCount }} workout{{ workoutCount !== 1 ? 's' : '' }}
       </span>
@@ -14,9 +17,25 @@
     <div class="week-card__workouts">
       @for (entry of sortedWorkouts; track entry.workout.id + '-' + entry.dayOfWeek + '-' + entry.orderInDay) {
         <div class="workout-entry">
-          <div class="workout-entry__name">{{ entry.workout.name }}</div>
-          <div class="workout-entry__day">{{ getDayName(entry.dayOfWeek) }}</div>
-          <div class="workout-entry__summary">{{ getWorkoutSummary(entry) }}</div>
+          <div class="workout-entry__header">
+            <div class="workout-entry__day">{{ getDayName(entry.dayOfWeek) }}</div>
+            <div class="workout-entry__name">{{ entry.workout.name }}</div>
+            <div class="workout-entry__step-count">{{ entry.workout.numValidSteps }} steps</div>
+          </div>
+          <div class="workout-entry__steps">
+            @for (step of entry.workout.steps; track step.stepOrder) {
+              <div class="step-row">
+                <span class="step-row__order">{{ step.stepOrder }}.</span>
+                <span class="step-row__name" [class]="getIntensityClass(step.intensity)">
+                  {{ step.stepName || formatIntensity(step.intensity) }}
+                </span>
+                <span class="step-row__duration">{{ formatStepDuration(step) }}</span>
+                @if (formatStepTarget(step)) {
+                  <span class="step-row__target">{{ formatStepTarget(step) }}</span>
+                }
+              </div>
+            }
+          </div>
         </div>
       }
     </div>

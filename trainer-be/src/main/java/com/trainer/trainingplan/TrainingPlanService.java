@@ -18,19 +18,24 @@ public class TrainingPlanService {
     private final TrainingPlanRepository trainingPlanRepository;
     private final PlanWorkoutRepository planWorkoutRepository;
     private final WorkoutRepository workoutRepository;
+    private final DummyPlanGenerator dummyPlanGenerator;
 
     public TrainingPlanService(TrainingPlanRepository trainingPlanRepository,
                                PlanWorkoutRepository planWorkoutRepository,
-                               WorkoutRepository workoutRepository) {
+                               WorkoutRepository workoutRepository,
+                               DummyPlanGenerator dummyPlanGenerator) {
         this.trainingPlanRepository = trainingPlanRepository;
         this.planWorkoutRepository = planWorkoutRepository;
         this.workoutRepository = workoutRepository;
+        this.dummyPlanGenerator = dummyPlanGenerator;
     }
 
     /**
      * Creates a new training plan with state NEW.
      * Validates enum values (distance, duration, aiModel) before persisting.
+     * If aiModel is DUMMY, generates placeholder workouts and schedules them.
      */
+    @Transactional
     public TrainingPlanResponse createPlan(Long userId, CreateTrainingPlanRequest request) {
         PlanDistance distance = parseEnum(PlanDistance.class, request.distance(), "distance");
         PlanDuration duration = parseEnum(PlanDuration.class, request.duration(), "duration");
@@ -49,6 +54,11 @@ public class TrainingPlanService {
         plan.setState(PlanState.NEW);
 
         TrainingPlan saved = trainingPlanRepository.save(plan);
+
+        if (aiModel == AiModel.DUMMY) {
+            dummyPlanGenerator.generate(saved);
+        }
+
         return toResponse(saved);
     }
 
@@ -308,6 +318,20 @@ public class TrainingPlanService {
 
     private PlanWorkoutEntryResponse toWorkoutEntryResponse(PlanWorkout planWorkout) {
         var workout = planWorkout.getWorkout();
+        var steps = workout.getSteps().stream()
+                .map(step -> new WorkoutStepResponse(
+                        step.getStepOrder(),
+                        step.getStepName(),
+                        step.getIntensity().name(),
+                        step.getDurationType().name(),
+                        step.getDurationValue(),
+                        step.getTargetType().name(),
+                        step.getTargetValueLow(),
+                        step.getTargetValueHigh(),
+                        step.getNotes()
+                ))
+                .toList();
+
         return new PlanWorkoutEntryResponse(
                 planWorkout.getDayOfWeek(),
                 planWorkout.getOrderInDay(),
@@ -316,7 +340,8 @@ public class TrainingPlanService {
                         workout.getName(),
                         workout.getSportType().name(),
                         workout.getSubSport() != null ? workout.getSubSport().name() : null,
-                        workout.getNumValidSteps()
+                        workout.getNumValidSteps(),
+                        steps
                 )
         );
     }

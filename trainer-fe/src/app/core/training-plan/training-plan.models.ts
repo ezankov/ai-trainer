@@ -34,6 +34,19 @@ export interface WorkoutSummary {
   sportType: string;
   subSport: string | null;
   numValidSteps: number;
+  steps: WorkoutStep[];
+}
+
+export interface WorkoutStep {
+  stepOrder: number;
+  stepName: string | null;
+  intensity: string;
+  durationType: string;
+  durationValue: number | null;
+  targetType: string;
+  targetValueLow: number | null;
+  targetValueHigh: number | null;
+  notes: string | null;
 }
 
 export interface CreatePlanRequest {

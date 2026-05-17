@@ -115,8 +115,39 @@ export class ActivePlanViewComponent implements OnInit {
     }
   }
 
+  getWeekStartDate(weekNumber: number): string | null {
+    const plan = this.plan();
+    if (!plan) return null;
+
+    // Calculate plan start: race date minus duration weeks, aligned to Monday
+    const raceDate = new Date(plan.raceDate + 'T00:00:00');
+    const durationWeeks = this.getDurationWeeks(plan.duration);
+    const planStart = new Date(raceDate);
+    planStart.setDate(planStart.getDate() - (durationWeeks * 7));
+
+    // Align to Monday (getDay: 0=Sun, 1=Mon, ..., 6=Sat)
+    const dayOfWeek = planStart.getDay();
+    const daysToMonday = dayOfWeek === 0 ? 1 : (dayOfWeek === 1 ? 0 : 8 - dayOfWeek);
+    planStart.setDate(planStart.getDate() + daysToMonday);
+
+    // Add (weekNumber - 1) weeks
+    const weekStart = new Date(planStart);
+    weekStart.setDate(weekStart.getDate() + (weekNumber - 1) * 7);
+
+    return weekStart.toISOString().split('T')[0];
+  }
+
   onCreatePlan(): void {
     this.createPlanRequested.emit();
+  }
+
+  private getDurationWeeks(duration: string): number {
+    const map: Record<string, number> = {
+      WEEKS_8: 8,
+      WEEKS_10: 10,
+      WEEKS_12: 12,
+    };
+    return map[duration] ?? 12;
   }
 
   private dayNumberToShortName(day: number): string {
