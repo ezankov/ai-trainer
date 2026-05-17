@@ -20,20 +20,38 @@
           <div class="workout-entry__header">
             <div class="workout-entry__day">{{ getDayName(entry.dayOfWeek) }}</div>
             <div class="workout-entry__name">{{ entry.workout.name }}</div>
-            <div class="workout-entry__step-count">{{ entry.workout.numValidSteps }} steps</div>
           </div>
           <div class="workout-entry__steps">
-            @for (step of entry.workout.steps; track step.stepOrder) {
-              <div class="step-row">
-                <span class="step-row__order">{{ step.stepOrder }}.</span>
-                <span class="step-row__name" [class]="getIntensityClass(step.intensity)">
-                  {{ step.stepName || formatIntensity(step.intensity) }}
-                </span>
-                <span class="step-row__duration">{{ formatStepDuration(step) }}</span>
-                @if (formatStepTarget(step)) {
-                  <span class="step-row__target">{{ formatStepTarget(step) }}</span>
-                }
-              </div>
+            @for (step of entry.workout.steps; track step.stepOrder; let i = $index) {
+              @if (isRepeatStep(step)) {
+                <!-- Repeat header shown above the grouped block -->
+                <div class="step-row step-row--repeat-header">
+                  <span class="step-row__repeat-icon pi pi-replay"></span>
+                  <span class="step-row__repeat-label">{{ getRepeatLabel(step) }}</span>
+                </div>
+              } @else if (isInsideRepeatGroup(entry.workout.steps, i)) {
+                <!-- Steps inside a repeat group are indented -->
+                <div class="step-row step-row--grouped">
+                  <span class="step-row__name" [class]="getIntensityClass(step.intensity)">
+                    {{ step.stepName || formatIntensity(step.intensity) }}
+                  </span>
+                  <span class="step-row__duration">{{ formatStepDuration(step) }}</span>
+                  @if (formatStepTarget(step)) {
+                    <span class="step-row__target">{{ formatStepTarget(step) }}</span>
+                  }
+                </div>
+              } @else {
+                <!-- Regular steps (warm up, cool down, etc.) -->
+                <div class="step-row">
+                  <span class="step-row__name" [class]="getIntensityClass(step.intensity)">
+                    {{ step.stepName || formatIntensity(step.intensity) }}
+                  </span>
+                  <span class="step-row__duration">{{ formatStepDuration(step) }}</span>
+                  @if (formatStepTarget(step)) {
+                    <span class="step-row__target">{{ formatStepTarget(step) }}</span>
+                  }
+                </div>
+              }
             }
           </div>
         </div>

@@ -124,12 +124,24 @@ public class DummyPlanGenerator {
     }
 
     private List<StepTemplate> buildIntervalSteps() {
+        // Garmin FIT-compatible flat interval structure:
+        // Step 0: Warm Up (2.4km, no target)
+        // Step 1: Fast 1km (interval, pace target)
+        // Step 2: Fast 200m (interval, pace target)
+        // Step 3: Rest 2min (recovery, no target)
+        // Step 4: Repeat from step 1, 4 iterations
+        // Step 5: Cool Down (1.8km, no target)
+        //
+        // The repeat step (4) references durationValue=1 (step index to repeat from)
+        // and targetValueLow=4 (number of iterations).
+        // Steps 1-3 are the repeated block.
         return List.of(
-                new StepTemplate("Warm Up", Intensity.WARMUP, DurationType.TIME, 600, TargetType.OPEN, null, null),
-                new StepTemplate("Fast", Intensity.INTERVAL, DurationType.TIME, 180, TargetType.SPEED, 280, 320),
-                new StepTemplate("Recovery", Intensity.RECOVERY, DurationType.TIME, 120, TargetType.OPEN, null, null),
-                new StepTemplate("Fast", Intensity.INTERVAL, DurationType.TIME, 180, TargetType.SPEED, 280, 320),
-                new StepTemplate("Cool Down", Intensity.COOLDOWN, DurationType.TIME, 300, TargetType.OPEN, null, null)
+                new StepTemplate("Warm Up", Intensity.WARMUP, DurationType.DISTANCE, 2400, TargetType.OPEN, null, null),
+                new StepTemplate("Fast 1km", Intensity.INTERVAL, DurationType.DISTANCE, 1000, TargetType.SPEED, 210, 230),
+                new StepTemplate("Fast 200m", Intensity.INTERVAL, DurationType.DISTANCE, 200, TargetType.SPEED, 190, 210),
+                new StepTemplate("Rest", Intensity.REST, DurationType.TIME, 120, TargetType.OPEN, null, null),
+                new StepTemplate("Repeat", Intensity.REST, DurationType.REPEAT_UNTIL_STEPS_COMPLETE, 1, TargetType.OPEN, 4, null),
+                new StepTemplate("Cool Down", Intensity.COOLDOWN, DurationType.DISTANCE, 1800, TargetType.OPEN, null, null)
         );
     }
 
