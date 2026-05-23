@@ -1,5 +1,12 @@
 package com.trainer.auth;
 
+import com.trainer.ai.AiGenerationException;
+import com.trainer.ai.AiGenerationTimeoutException;
+import com.trainer.ai.AiModelNotAvailableException;
+import com.trainer.ai.AiModelNotSupportedException;
+import com.trainer.ai.AiResponseParseException;
+import com.trainer.ai.AiResponseValidationException;
+import com.trainer.ai.AthleteProfileNotFoundException;
 import com.trainer.profile.ProfileAlreadyExistsException;
 import com.trainer.profile.ProfileNotFoundException;
 import com.trainer.profile.ProfileValidationException;
@@ -8,6 +15,8 @@ import com.trainer.trainingplan.PlanSchedulingException;
 import com.trainer.trainingplan.TrainingPlanNotFoundException;
 import com.trainer.workout.WorkoutNotFoundException;
 import com.trainer.workout.WorkoutValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,6 +35,8 @@ import java.util.UUID;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -154,6 +165,55 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleAuthenticationFailure(Exception ex) {
         return new ErrorResponse("Invalid credentials");
+    }
+
+    @ExceptionHandler(AiModelNotAvailableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleAiModelNotAvailable(AiModelNotAvailableException ex) {
+        log.error("AI model not available: {}", ex.getMessage(), ex);
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(AiModelNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleAiModelNotSupported(AiModelNotSupportedException ex) {
+        log.error("AI model not supported: {}", ex.getMessage(), ex);
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(AthleteProfileNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleAthleteProfileNotFound(AthleteProfileNotFoundException ex) {
+        log.error("Athlete profile not found: {}", ex.getMessage(), ex);
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(AiGenerationException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public ErrorResponse handleAiGeneration(AiGenerationException ex) {
+        log.error("AI generation failed: {}", ex.getMessage(), ex);
+        return new ErrorResponse("AI model failed to generate the plan");
+    }
+
+    @ExceptionHandler(AiGenerationTimeoutException.class)
+    @ResponseStatus(HttpStatus.GATEWAY_TIMEOUT)
+    public ErrorResponse handleAiGenerationTimeout(AiGenerationTimeoutException ex) {
+        log.error("AI generation timed out: {}", ex.getMessage(), ex);
+        return new ErrorResponse("AI model timed out while generating the plan");
+    }
+
+    @ExceptionHandler(AiResponseValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public ErrorResponse handleAiResponseValidation(AiResponseValidationException ex) {
+        log.error("AI response validation failed: {}", ex.getMessage(), ex);
+        return new ErrorResponse("AI model returned an invalid response");
+    }
+
+    @ExceptionHandler(AiResponseParseException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public ErrorResponse handleAiResponseParse(AiResponseParseException ex) {
+        log.error("AI response parse failed: {}", ex.getMessage(), ex);
+        return new ErrorResponse("AI model returned an invalid response");
     }
 
     @ExceptionHandler(Exception.class)

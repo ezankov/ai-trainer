@@ -1,5 +1,6 @@
 package com.trainer.trainingplan;
 
+import com.trainer.ai.AiPlanGenerator;
 import com.trainer.workout.*;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * without calling a real AI service.
  */
 @Component
-public class DummyPlanGenerator {
+public class DummyPlanGenerator implements AiPlanGenerator {
 
     private final WorkoutRepository workoutRepository;
     private final PlanWorkoutRepository planWorkoutRepository;
@@ -31,6 +32,7 @@ public class DummyPlanGenerator {
      * - Long run day gets a "Long Run" workout
      * - Other training days get a rotation of Easy Run, Intervals, Tempo Run
      */
+    @Override
     public void generate(TrainingPlan plan) {
         Long userId = plan.getUserId();
         int totalWeeks = plan.getDuration().getWeeks();

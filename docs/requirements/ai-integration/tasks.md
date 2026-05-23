@@ -6,8 +6,8 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
 
 ## Tasks
 
-- [ ] 1. Add Spring AI dependencies and configuration properties
-  - [ ] 1.1 Add Spring AI dependencies to `pom.xml`
+- [x] 1. Add Spring AI dependencies and configuration properties
+  - [x] 1.1 Add Spring AI dependencies to `pom.xml`
     - Add Spring AI BOM for dependency management
     - Add `spring-ai-openai-spring-boot-starter` (for ChatGPT and Kiro)
     - Add `spring-ai-anthropic-spring-boot-starter` (for Claude)
@@ -15,22 +15,22 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - Add `spring-ai-test` as test dependency
     - _Requirements: 1.4, 5.6_
 
-  - [ ] 1.2 Create `AiModelProperties` configuration class in `com.trainer.ai`
+  - [x] 1.2 Create `AiModelProperties` configuration class in `com.trainer.ai`
     - Create `AiModelProperties` record with `@ConfigurationProperties(prefix = "trainer.ai")`
     - Define nested `ModelConfig` record with fields: `enabled` (boolean), `apiKey` (String), `model` (String)
     - Add `isAvailable()` method: returns true only if enabled AND apiKey is non-null and non-blank
     - Add properties for chatgpt, claude, gemini, kiro
     - _Requirements: 5.1, 5.2, 5.4, 5.5_
 
-  - [ ] 1.3 Add default configuration to `application.yml`
+  - [x] 1.3 Add default configuration to `application.yml`
     - Add `trainer.ai.chatgpt.*`, `trainer.ai.claude.*`, `trainer.ai.gemini.*`, `trainer.ai.kiro.*` properties
     - Set all `enabled` flags to `false` by default
     - Map API keys from environment variables (`${OPENAI_API_KEY:}`, `${ANTHROPIC_API_KEY:}`, etc.)
     - Set default model identifiers (gpt-4o, claude-sonnet-4-20250514, gemini-2.0-flash, kiro-v1)
     - _Requirements: 5.1, 5.2, 5.4_
 
-- [ ] 2. Create exception hierarchy and core interface
-  - [ ] 2.1 Create exception classes in `com.trainer.ai`
+- [x] 2. Create exception hierarchy and core interface
+  - [x] 2.1 Create exception classes in `com.trainer.ai`
     - Create `AiException` base class extending `RuntimeException`
     - Create `AiGenerationException` extending `AiException` (AI provider HTTP errors)
     - Create `AiGenerationTimeoutException` extending `AiException` (60s timeout)
@@ -41,12 +41,12 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - Create `AthleteProfileNotFoundException` extending `RuntimeException` (no profile for user)
     - _Requirements: 6.1, 6.2, 6.3, 6.6, 6.9, 7.5, 7.7_
 
-  - [ ] 2.2 Create `AiPlanGenerator` interface in `com.trainer.ai`
+  - [x] 2.2 Create `AiPlanGenerator` interface in `com.trainer.ai`
     - Define `void generate(TrainingPlan plan)` method
     - Add Javadoc specifying the contract: persists Workout and PlanWorkout entities as side-effect
     - _Requirements: 1.1, 1.7_
 
-  - [ ] 2.3 Extend `GlobalExceptionHandler` for AI exceptions
+  - [x] 2.3 Extend `GlobalExceptionHandler` for AI exceptions
     - Map `AiModelNotAvailableException` → HTTP 400
     - Map `AiModelNotSupportedException` → HTTP 400
     - Map `AthleteProfileNotFoundException` → HTTP 400
@@ -57,18 +57,18 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - Ensure error responses never expose raw AI API responses or stack traces
     - _Requirements: 6.1, 6.6, 6.9, 7.5, 7.7, 7.8_
 
-- [ ] 3. Checkpoint — Ensure project compiles with new dependencies and exception classes
+- [x] 3. Checkpoint — Ensure project compiles with new dependencies and exception classes
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 4. Implement AI response DTOs and response parsing
-  - [ ] 4.1 Create AI response DTO records in `com.trainer.ai`
+- [x] 4. Implement AI response DTOs and response parsing
+  - [x] 4.1 Create AI response DTO records in `com.trainer.ai`
     - Create `AiPlanResponse` record with `List<AiWorkoutResponse> workouts`
     - Create `AiWorkoutResponse` record with `name`, `sportType`, `subSport`, `steps`, `schedule`
     - Create `AiWorkoutStepResponse` record with `stepOrder`, `stepName`, `intensity`, `durationType`, `durationValue`, `targetType`, `targetValueLow`, `targetValueHigh`
     - Create `AiScheduleResponse` record with `weekNumber`, `dayOfWeek`, `orderInDay`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 4.2 Implement response parsing logic in `SpringAiPlanGenerator` (or a dedicated parser class)
+  - [x] 4.2 Implement response parsing logic in `SpringAiPlanGenerator` (or a dedicated parser class)
     - Parse JSON string into `AiPlanResponse` using Jackson `ObjectMapper`
     - Throw `AiResponseParseException` if JSON is malformed or does not match schema
     - Throw `AiResponseValidationException` if `workouts` array is empty or missing
@@ -86,8 +86,8 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - For any string that is not valid JSON or does not conform to AiPlanResponse schema, verify `AiResponseParseException` is thrown
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` invalid string arbitraries_
 
-- [ ] 5. Implement AI response validator
-  - [ ] 5.1 Create `AiResponseValidator` in `com.trainer.ai`
+- [x] 5. Implement AI response validator
+  - [x] 5.1 Create `AiResponseValidator` in `com.trainer.ai`
     - Validate `workouts` array is non-empty
     - Validate each workout `name` is non-blank and max 50 characters
     - Validate each workout has at least 1 step
@@ -110,8 +110,8 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - For any `AiPlanResponse` with one invalid field injected (bad weekNumber, dayOfWeek, orderInDay, intensity, durationType, or targetType), verify `AiResponseValidationException` is thrown identifying the invalid field
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` single-field-invalid arbitraries_
 
-- [ ] 6. Implement AI response mapper
-  - [ ] 6.1 Create `AiResponseMapper` in `com.trainer.ai`
+- [x] 6. Implement AI response mapper
+  - [x] 6.1 Create `AiResponseMapper` in `com.trainer.ai`
     - For each workout in the validated response: create `Workout` entity with `userId = plan.getUserId()`, `sportType`, `subSport`, `name`, `numValidSteps = steps.size()`
     - For each step: create `WorkoutStep` entity with `stepOrder`, `stepName`, `intensity`, `durationType`, `durationValue`, `targetType`, `targetValueLow`, `targetValueHigh`
     - Save each workout via `WorkoutRepository` (cascades to steps)
@@ -125,16 +125,16 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - For any valid `AiPlanResponse` and any `TrainingPlan`, verify created Workout entities have matching name, sportType, numValidSteps, userId; WorkoutSteps match all fields; PlanWorkouts match schedule fields
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` valid response + plan arbitraries, mocked repositories_
 
-- [ ] 7. Checkpoint — Ensure response parsing, validation, and mapping compile and tests pass
+- [x] 7. Checkpoint — Ensure response parsing, validation, and mapping compile and tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 8. Implement athlete profile tool and prompt builder
-  - [ ] 8.1 Create `AthleteProfileToolResponse` record in `com.trainer.ai`
+- [x] 8. Implement athlete profile tool and prompt builder
+  - [x] 8.1 Create `AthleteProfileToolResponse` record in `com.trainer.ai`
     - Fields: `dateOfBirth`, `weightKg`, `restingHR`, `maxHR`, `lthr`, `thresholdPaceSecondsPerKm`, `vo2Max`, `fiveKSeconds`, `tenKSeconds`, `halfMarathonSeconds`, `marathonSeconds`
     - Null fields included in JSON serialization
     - _Requirements: 2.2_
 
-  - [ ] 8.2 Create `AthleteProfileTool` in `com.trainer.ai`
+  - [x] 8.2 Create `AthleteProfileTool` in `com.trainer.ai`
     - Annotate method with `@Tool` with description instructing the model to call it before generating
     - Accept `ToolContext` parameter to extract `userId`
     - Retrieve `AthleteProfile` from `AthleteProfileRepository` by userId
@@ -154,11 +154,11 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - For any two distinct users with profiles, verify tool invoked with userId=A returns only A's data
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` pairs of random profiles_
 
-  - [ ] 8.5 Create training principles resource file
+  - [x] 8.5 Create training principles resource file
     - Copy `docs/requirements/ai-integration/training-principles.md` to `src/main/resources/prompts/training-principles.md`
     - _Requirements: 4.9, 4.10_
 
-  - [ ] 8.6 Create `AiPromptBuilder` in `com.trainer.ai`
+  - [x] 8.6 Create `AiPromptBuilder` in `com.trainer.ai`
     - Load training principles from `classpath:prompts/training-principles.md` at startup
     - `buildSystemPrompt()`: compose role definition + full training principles + instruction to call `getAthleteProfile` tool + JSON response schema specification
     - `buildUserPrompt(TrainingPlan plan)`: include event name, distance (human-readable), duration (weeks), race date, target pace (MM:SS/km), training days (day names), long run day (day name), instruction to generate one workout per training day per week
@@ -176,8 +176,8 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - Verify `buildSystemPrompt()` contains the full content of the training principles document
     - _Uses jqwik single verification (static content)_
 
-- [ ] 9. Implement SpringAiPlanGenerator and factory
-  - [ ] 9.1 Create `SpringAiPlanGenerator` in `com.trainer.ai`
+- [x] 9. Implement SpringAiPlanGenerator and factory
+  - [x] 9.1 Create `SpringAiPlanGenerator` in `com.trainer.ai`
     - Accept `ChatModel`, `AiPromptBuilder`, `AthleteProfileTool`, `AiResponseValidator`, `AiResponseMapper` as constructor dependencies
     - Implement `generate(TrainingPlan plan)`:
       1. Build `ChatClient` from `ChatModel`
@@ -192,7 +192,7 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - Do NOT retry on failure
     - _Requirements: 1.1, 1.4, 1.7, 2.5, 2.6, 2.7, 6.1, 6.2, 6.7, 6.8_
 
-  - [ ] 9.2 Create `AiConfiguration` in `com.trainer.ai`
+  - [x] 9.2 Create `AiConfiguration` in `com.trainer.ai`
     - Create conditional beans for each AI model using `@ConditionalOnProperty`
     - `chatgptPlanGenerator`: enabled when `trainer.ai.chatgpt.enabled=true`, uses OpenAI `ChatModel`
     - `claudePlanGenerator`: enabled when `trainer.ai.claude.enabled=true`, uses Anthropic `ChatModel`
@@ -201,7 +201,7 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - Enable `@ConfigurationProperties` for `AiModelProperties`
     - _Requirements: 5.6, 5.7_
 
-  - [ ] 9.3 Create `AiPlanGeneratorFactory` in `com.trainer.ai`
+  - [x] 9.3 Create `AiPlanGeneratorFactory` in `com.trainer.ai`
     - Inject all available `SpringAiPlanGenerator` beans (mapped by `AiModel`)
     - Inject `DummyPlanGenerator` and `AiModelProperties`
     - `getGenerator(AiModel)`:
@@ -215,14 +215,14 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - For any non-DUMMY `AiModel` with enabled=false or API key null/empty/whitespace, verify `AiModelNotAvailableException` is thrown
     - _Uses jqwik `@Property(tries = 100)` with `@Provide` random AiModel + config combinations_
 
-- [ ] 10. Refactor DummyPlanGenerator and TrainingPlanService
-  - [ ] 10.1 Modify `DummyPlanGenerator` to implement `AiPlanGenerator`
+- [x] 10. Refactor DummyPlanGenerator and TrainingPlanService
+  - [x] 10.1 Modify `DummyPlanGenerator` to implement `AiPlanGenerator`
     - Add `implements AiPlanGenerator` to class declaration
     - Add `@Override` annotation to existing `generate(TrainingPlan plan)` method
     - No changes to internal logic
     - _Requirements: 1.3_
 
-  - [ ] 10.2 Modify `TrainingPlanService` to use `AiPlanGeneratorFactory`
+  - [x] 10.2 Modify `TrainingPlanService` to use `AiPlanGeneratorFactory`
     - Replace `DummyPlanGenerator` dependency with `AiPlanGeneratorFactory`
     - In `createPlan()`: add pre-condition check — if aiModel is not DUMMY, verify athlete profile exists (throw `AthleteProfileNotFoundException` if missing)
     - Replace `if (aiModel == AiModel.DUMMY) { dummyPlanGenerator.generate(saved); }` with `AiPlanGenerator generator = aiPlanGeneratorFactory.getGenerator(aiModel); generator.generate(saved);`
@@ -235,7 +235,7 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - For any exception thrown by `AiPlanGenerator.generate()`, verify no Workout or PlanWorkout entities are persisted for the plan, and the TrainingPlan itself is not persisted
     - _Uses jqwik `@Property(tries = 100)` with mocked generator throwing random AI exceptions_
 
-- [ ] 11. Checkpoint — Ensure full integration compiles and existing tests pass
+- [x] 11. Checkpoint — Ensure full integration compiles and existing tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 12. Write unit tests for AI components
@@ -309,7 +309,7 @@ Integrate real AI models (ChatGPT, Claude, Gemini, Kiro) into the training plan 
     - Verify response structure is identical regardless of AI model used
     - _Requirements: 6.1, 6.2, 6.4, 6.5, 6.6, 6.9, 7.1, 7.2, 7.3, 7.4, 7.5, 7.7, 7.8_
 
-- [ ] 14. Final checkpoint — Ensure all tests pass
+- [x] 14. Final checkpoint — Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

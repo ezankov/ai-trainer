@@ -25,6 +25,48 @@ spring:
     default-schema: trainer
     baseline-on-migrate: false    # set to true only when migrating an existing schema
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        options:
+          model: gpt-4o
+        connect-timeout: 10s
+        read-timeout: 120s
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY:}
+      enabled: false
+    vertex:
+      ai:
+        gemini:
+          enabled: false
+          project-id: ${GOOGLE_CLOUD_PROJECT:none}
+          location: ${GOOGLE_CLOUD_LOCATION:us-central1}
+
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.model.vertexai.autoconfigure.gemini.VertexAiGeminiChatAutoConfiguration
+      - org.springframework.ai.model.anthropic.autoconfigure.AnthropicChatAutoConfiguration
+
+trainer:
+  ai:
+    chatgpt:
+      enabled: true
+      api-key: ${OPENAI_API_KEY:}
+      model: gpt-4o
+    claude:
+      enabled: false
+      api-key: ${ANTHROPIC_API_KEY:}
+      model: claude-sonnet-4-20250514
+    gemini:
+      enabled: false
+      api-key: ${GOOGLE_AI_API_KEY:}
+      model: gemini-2.0-flash
+    kiro:
+      enabled: false
+      api-key: ${KIRO_API_KEY:}
+      model: kiro-v1
+
 app:
   jwt:
     secret: ${JWT_SECRET:changeme-this-is-a-dev-only-secret-replace-in-production}

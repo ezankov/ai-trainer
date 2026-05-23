@@ -1,5 +1,9 @@
 package com.trainer.trainingplan;
 
+import com.trainer.ai.AiPlanGenerator;
+import com.trainer.ai.AiPlanGeneratorFactory;
+import com.trainer.ai.AthleteProfileNotFoundException;
+import com.trainer.profile.AthleteProfileRepository;
 import com.trainer.workout.Workout;
 import com.trainer.workout.WorkoutRepository;
 import org.springframework.stereotype.Service;
@@ -18,16 +22,19 @@ public class TrainingPlanService {
     private final TrainingPlanRepository trainingPlanRepository;
     private final PlanWorkoutRepository planWorkoutRepository;
     private final WorkoutRepository workoutRepository;
-    private final DummyPlanGenerator dummyPlanGenerator;
+    private final AiPlanGeneratorFactory aiPlanGeneratorFactory;
+    private final AthleteProfileRepository athleteProfileRepository;
 
     public TrainingPlanService(TrainingPlanRepository trainingPlanRepository,
                                PlanWorkoutRepository planWorkoutRepository,
                                WorkoutRepository workoutRepository,
-                               DummyPlanGenerator dummyPlanGenerator) {
+                               AiPlanGeneratorFactory aiPlanGeneratorFactory,
+                               AthleteProfileRepository athleteProfileRepository) {
         this.trainingPlanRepository = trainingPlanRepository;
         this.planWorkoutRepository = planWorkoutRepository;
         this.workoutRepository = workoutRepository;
-        this.dummyPlanGenerator = dummyPlanGenerator;
+        this.aiPlanGeneratorFactory = aiPlanGeneratorFactory;
+        this.athleteProfileRepository = athleteProfileRepository;
     }
 
     /**
@@ -55,9 +62,15 @@ public class TrainingPlanService {
 
         TrainingPlan saved = trainingPlanRepository.save(plan);
 
-        if (aiModel == AiModel.DUMMY) {
-            dummyPlanGenerator.generate(saved);
+        // Pre-condition: non-DUMMY models require an athlete profile
+        if (aiModel != AiModel.DUMMY) {
+            athleteProfileRepository.findByUserId(userId)
+                    .orElseThrow(() -> new AthleteProfileNotFoundException(
+                            "An athlete profile is required for AI-generated plans"));
         }
+
+        AiPlanGenerator generator = aiPlanGeneratorFactory.getGenerator(aiModel);
+        generator.generate(saved);
 
         return toResponse(saved);
     }

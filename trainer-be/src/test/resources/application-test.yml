@@ -17,6 +17,34 @@ spring:
   flyway:
     enabled: false   # Use Hibernate's ddl-auto in tests; Flyway is disabled
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:disabled}
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY:disabled}
+      enabled: false
+    vertex:
+      ai:
+        gemini:
+          enabled: false
+          project-id: test-project
+
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.model.vertexai.autoconfigure.gemini.VertexAiGeminiChatAutoConfiguration
+      - org.springframework.ai.model.anthropic.autoconfigure.AnthropicChatAutoConfiguration
+
+trainer:
+  ai:
+    chatgpt:
+      enabled: false
+    claude:
+      enabled: false
+    gemini:
+      enabled: false
+    kiro:
+      enabled: false
+
 app:
   jwt:
     secret: test-secret-key-that-is-long-enough-for-hmac-sha256
